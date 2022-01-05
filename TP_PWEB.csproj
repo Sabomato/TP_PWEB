@@ -7,9 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.19" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.19" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.19" />
+    <Compile Remove="Data\Migrations\20220105114636_PropertyV1.cs" />
+    <Compile Remove="Data\Migrations\20220105114636_PropertyV1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220105115837_PropertyV1.cs" />
+    <Compile Remove="Data\Migrations\20220105115837_PropertyV1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220105120814_PropertyV1.cs" />
+    <Compile Remove="Data\Migrations\20220105120814_PropertyV1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220105121707_PropertyV1.cs" />
+    <Compile Remove="Data\Migrations\20220105121707_PropertyV1.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.21" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.21" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.21" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.21">
       <PrivateAssets>all</PrivateAssets>
@@ -21,6 +32,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.19" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+    <PackageReference Include="SendGrid" Version="9.25.1" />
   </ItemGroup>
 
 </Project>

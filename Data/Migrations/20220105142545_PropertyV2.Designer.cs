@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TP_PWEB.Data;
 
 namespace TP_PWEB.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220105142545_PropertyV2")]
+    partial class PropertyV2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -364,7 +366,7 @@ namespace TP_PWEB.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsMany("TP_PWEB.Models.Verification", "EntranceVerifications", b1 =>
+                    b.OwnsMany("TP_PWEB.Models.Verification", "Verifications", b1 =>
                         {
                             b1.Property<int>("PropertyId")
                                 .HasColumnType("int");
@@ -387,36 +389,7 @@ namespace TP_PWEB.Data.Migrations
 
                             b1.HasKey("PropertyId", "Id");
 
-                            b1.ToTable("Properties_EntranceVerifications");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PropertyId");
-                        });
-
-                    b.OwnsMany("TP_PWEB.Models.Verification", "ExitVerifications", b1 =>
-                        {
-                            b1.Property<int>("PropertyId")
-                                .HasColumnType("int");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                            b1.Property<string>("Name")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Observation")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<bool>("isChecked")
-                                .HasColumnType("bit");
-
-                            b1.HasKey("PropertyId", "Id");
-
-                            b1.ToTable("Properties_ExitVerifications");
+                            b1.ToTable("Verification");
 
                             b1.WithOwner()
                                 .HasForeignKey("PropertyId");
