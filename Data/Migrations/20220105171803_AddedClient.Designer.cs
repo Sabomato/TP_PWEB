@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TP_PWEB.Data;
 
 namespace TP_PWEB.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220105171803_AddedClient")]
+    partial class AddedClient
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,10 +164,12 @@ namespace TP_PWEB.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -202,10 +206,12 @@ namespace TP_PWEB.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -222,7 +228,7 @@ namespace TP_PWEB.Data.Migrations
 
                     b.HasKey("ClientId");
 
-                    b.ToTable("Clients");
+                    b.ToTable("Client");
                 });
 
             modelBuilder.Entity("TP_PWEB.Models.Evaluation", b =>
@@ -235,8 +241,8 @@ namespace TP_PWEB.Data.Migrations
                     b.Property<string>("Commentary")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Rating")
-                        .HasColumnType("float");
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -277,25 +283,12 @@ namespace TP_PWEB.Data.Migrations
                     b.ToTable("Properties");
                 });
 
-            modelBuilder.Entity("TP_PWEB.Models.PropertyManager", b =>
-                {
-                    b.Property<string>("PropertyManagerId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("PropertyManagerId");
-
-                    b.ToTable("PropertyManager");
-                });
-
             modelBuilder.Entity("TP_PWEB.Models.Reservation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ClientEvaluationId")
-                        .HasColumnType("int");
 
                     b.Property<string>("ClientId")
                         .IsRequired()
@@ -304,57 +297,24 @@ namespace TP_PWEB.Data.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PropertyId")
+                    b.Property<int>("EvaluationId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PropertyId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("StayEvaluationId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ClientEvaluationId");
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("PropertyId");
+                    b.HasIndex("EvaluationId");
 
-                    b.HasIndex("StayEvaluationId");
+                    b.HasIndex("PropertyId");
 
                     b.ToTable("Reservation");
-                });
-
-            modelBuilder.Entity("TP_PWEB.Models.Verification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Observation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PropertyId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isAtExit")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("isChecked")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PropertyId");
-
-                    b.ToTable("Verification");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -410,43 +370,88 @@ namespace TP_PWEB.Data.Migrations
 
             modelBuilder.Entity("TP_PWEB.Models.Property", b =>
                 {
-                    b.HasOne("TP_PWEB.Models.PropertyManager", "PropertyManager")
-                        .WithMany("Properties")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Owner")
+                        .WithMany()
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.OwnsMany("TP_PWEB.Models.Verification", "EntranceVerifications", b1 =>
+                        {
+                            b1.Property<int>("PropertyId")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Observation")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<bool>("isChecked")
+                                .HasColumnType("bit");
+
+                            b1.HasKey("PropertyId", "Id");
+
+                            b1.ToTable("Properties_EntranceVerifications");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PropertyId");
+                        });
+
+                    b.OwnsMany("TP_PWEB.Models.Verification", "ExitVerifications", b1 =>
+                        {
+                            b1.Property<int>("PropertyId")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Observation")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<bool>("isChecked")
+                                .HasColumnType("bit");
+
+                            b1.HasKey("PropertyId", "Id");
+
+                            b1.ToTable("Properties_ExitVerifications");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PropertyId");
+                        });
                 });
 
             modelBuilder.Entity("TP_PWEB.Models.Reservation", b =>
                 {
-                    b.HasOne("TP_PWEB.Models.Evaluation", "ClientEvaluation")
-                        .WithMany()
-                        .HasForeignKey("ClientEvaluationId");
-
                     b.HasOne("TP_PWEB.Models.Client", "Client")
                         .WithMany("Reservations")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TP_PWEB.Models.Property", "Property")
-                        .WithMany("Reservations")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TP_PWEB.Models.Evaluation", "StayEvaluation")
+                    b.HasOne("TP_PWEB.Models.Evaluation", "Evaluation")
                         .WithMany()
-                        .HasForeignKey("StayEvaluationId");
-                });
-
-            modelBuilder.Entity("TP_PWEB.Models.Verification", b =>
-                {
-                    b.HasOne("TP_PWEB.Models.Property", "Property")
-                        .WithMany("Verifications")
-                        .HasForeignKey("PropertyId")
+                        .HasForeignKey("EvaluationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("TP_PWEB.Models.Property", null)
+                        .WithMany("Reservations")
+                        .HasForeignKey("PropertyId");
                 });
 #pragma warning restore 612, 618
         }

@@ -15,6 +15,38 @@
     <Compile Remove="Data\Migrations\20220105120814_PropertyV1.Designer.cs" />
     <Compile Remove="Data\Migrations\20220105121707_PropertyV1.cs" />
     <Compile Remove="Data\Migrations\20220105121707_PropertyV1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220105171657_AddedClient.cs" />
+    <Compile Remove="Data\Migrations\20220105171657_AddedClient.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220110153252_ReservationV2.cs" />
+    <Compile Remove="Data\Migrations\20220110153252_ReservationV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220110161939_ReservationV2.cs" />
+    <Compile Remove="Data\Migrations\20220110161939_ReservationV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220110163239_ReservationV2.cs" />
+    <Compile Remove="Data\Migrations\20220110163239_ReservationV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220110164117_ReservationV2.cs" />
+    <Compile Remove="Data\Migrations\20220110164117_ReservationV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220110164523_ReservationV2.cs" />
+    <Compile Remove="Data\Migrations\20220110164523_ReservationV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220110164705_ReservationV2.cs" />
+    <Compile Remove="Data\Migrations\20220110164705_ReservationV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220110170406_ReservationV2.cs" />
+    <Compile Remove="Data\Migrations\20220110170406_ReservationV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220111102425_ReservationV2.cs" />
+    <Compile Remove="Data\Migrations\20220111102425_ReservationV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220111103621_ReservationV2.cs" />
+    <Compile Remove="Data\Migrations\20220111103621_ReservationV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220111103815_ReservationV2.cs" />
+    <Compile Remove="Data\Migrations\20220111103815_ReservationV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220111111322_ReservationV2.cs" />
+    <Compile Remove="Data\Migrations\20220111111322_ReservationV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220111112911_ReservationV2.cs" />
+    <Compile Remove="Data\Migrations\20220111112911_ReservationV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220111121302_ReservationV2.cs" />
+    <Compile Remove="Data\Migrations\20220111121302_ReservationV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220112131832_EvaluationV1.11.cs" />
+    <Compile Remove="Data\Migrations\20220112131832_EvaluationV1.11.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220112133211_EvaluationV1.11.cs" />
+    <Compile Remove="Data\Migrations\20220112133211_EvaluationV1.11.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

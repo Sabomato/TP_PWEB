@@ -12,6 +12,8 @@ namespace TP_PWEB.Models
     [Table("Properties")]
     public class Property
     {   
+
+
         public int Id { get; set; }
         
         [Required]
@@ -23,25 +25,25 @@ namespace TP_PWEB.Models
         public string Description { get; set; }
 
         [Required]
+        
         public double Price { get; set; }
 
         [Required]
         
         public string Comodities { get; set; }
 
-        public string OwnerId { get; set; }
 
         [Required]
         [ForeignKey("OwnerId")]
-        public virtual IdentityUser Owner { get; set; }
+        public virtual PropertyManager PropertyManager { get; set; }
         
         public virtual ICollection<Reservation> Reservations { get; set; }
-
         
-        public virtual ICollection<Verification> ExitVerifications { get; set; }
-        
+        //[ForeignKey("ExitVerification")]
+        public virtual ICollection<Verification> Verifications { get; set; }
 
-        public virtual ICollection<Verification> EntranceVerifications { get; set; }
+        //[ForeignKey("EntranceVerification")]
+        //public virtual ICollection<Verification> EntranceVerifications { get; set; }
 
     }
 }

@@ -13,28 +13,28 @@ namespace TP_PWEB.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required]       
         public DateTime StartDate { get; set; }
         [Required]
         public DateTime EndDate { get; set; }
 
+        public virtual Evaluation StayEvaluation { get; set; }
 
-        //public int EvaluationId { get; set; }
-        [Required]        
-        public Evaluation Evaluation { get; set; }
+        public virtual Evaluation ClientEvaluation { get; set; }
 
-        //public int PropertyId { get; set; }
 
-        //[Required]
-        //[ForeignKey("PropertyId")]
-        //public Property Property { get; set; }
+        public int PropertyId { get; set; }
+
+        [Required]
+        [ForeignKey("PropertyId")]
+        public virtual Property Property { get; set; }
 
 
         public string ClientId { get; set; }
 
         [Required]
         [ForeignKey("ClientId")]
-        public Client Client { get; set; }
+        public virtual Client Client { get; set; }
 
     }
 }

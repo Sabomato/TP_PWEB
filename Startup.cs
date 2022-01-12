@@ -29,25 +29,78 @@ namespace TP_PWEB
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<IdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                    .AddEntityFrameworkStores<ApplicationDbContext>();
+            
+            
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
+            
 
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            var roleNames = Configuration.GetSection("Roles").Get<string[]>();
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            IdentityResult roleResult;
+
+
+            foreach (var roleName in roleNames )
+            {
+
+
+                var roleExist = await RoleManager.RoleExistsAsync(roleName);
+
+                if (!roleExist)
+                {
+                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+
+
+            var admin = Configuration.GetSection("Admin");
+
+            var poweruser = new IdentityUser
+            {
+
+                 UserName = admin.GetValue<string>("Username"),
+                 Email = admin.GetValue<string>("Email"),
+
+
+            };
+            string password = admin.GetValue<string>("Password");
+            string email = admin.GetValue<string>("Email");
+            string username = admin.GetValue<string>("Username");
+
+
+            var _user = await UserManager.FindByEmailAsync(poweruser.Email);
+
+            if (_user == null)
+            {
+                var createPowerUser = await UserManager.CreateAsync(poweruser, admin.GetValue<string>("Password"));
+                if (createPowerUser.Succeeded)
+                {
+                    //here we tie the new user to the role
+                    await UserManager.AddToRoleAsync(poweruser, "Admin");
+
+                }
+            }
+        }
+        
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -60,6 +113,8 @@ namespace TP_PWEB
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+ 
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -67,6 +122,10 @@ namespace TP_PWEB
 
             app.UseAuthentication();
             app.UseAuthorization();
+            
+            
+            
+            CreateRoles(serviceProvider).Wait();
 
             app.UseEndpoints(endpoints =>
             {
@@ -74,6 +133,12 @@ namespace TP_PWEB
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                /*endpoints.MapAreaControllerRoute(
+                        name: "default",
+                        areaName:"Identity",
+                        pattern: "{area}/{Page=Account}/{action=Register}"
+                    );
+                */
             });
         }
     }

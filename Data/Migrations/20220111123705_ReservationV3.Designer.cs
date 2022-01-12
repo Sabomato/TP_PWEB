@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TP_PWEB.Data;
 
 namespace TP_PWEB.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220111123705_ReservationV3")]
+    partial class ReservationV3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,7 +224,7 @@ namespace TP_PWEB.Data.Migrations
 
                     b.HasKey("ClientId");
 
-                    b.ToTable("Clients");
+                    b.ToTable("Client");
                 });
 
             modelBuilder.Entity("TP_PWEB.Models.Evaluation", b =>
@@ -232,13 +234,25 @@ namespace TP_PWEB.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ClientReservationId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Commentary")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Rating")
                         .HasColumnType("float");
 
+                    b.Property<int>("StayReservationId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientReservationId")
+                        .IsUnique();
+
+                    b.HasIndex("StayReservationId")
+                        .IsUnique();
 
                     b.ToTable("Evaluation");
                 });
@@ -294,9 +308,6 @@ namespace TP_PWEB.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ClientEvaluationId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -310,18 +321,11 @@ namespace TP_PWEB.Data.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("StayEvaluationId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ClientEvaluationId");
 
                     b.HasIndex("ClientId");
 
                     b.HasIndex("PropertyId");
-
-                    b.HasIndex("StayEvaluationId");
 
                     b.ToTable("Reservation");
                 });
@@ -333,6 +337,12 @@ namespace TP_PWEB.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("EntrancePropertyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ExitPropertyId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -341,18 +351,14 @@ namespace TP_PWEB.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PropertyId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isAtExit")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("isChecked")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PropertyId");
+                    b.HasIndex("EntrancePropertyId");
+
+                    b.HasIndex("ExitPropertyId");
 
                     b.ToTable("Verification");
                 });
@@ -408,6 +414,21 @@ namespace TP_PWEB.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TP_PWEB.Models.Evaluation", b =>
+                {
+                    b.HasOne("TP_PWEB.Models.Reservation", "ClientReservation")
+                        .WithOne("ClientEvaluation")
+                        .HasForeignKey("TP_PWEB.Models.Evaluation", "ClientReservationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("TP_PWEB.Models.Reservation", "StayReservation")
+                        .WithOne("StayEvaluation")
+                        .HasForeignKey("TP_PWEB.Models.Evaluation", "StayReservationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TP_PWEB.Models.Property", b =>
                 {
                     b.HasOne("TP_PWEB.Models.PropertyManager", "PropertyManager")
@@ -419,10 +440,6 @@ namespace TP_PWEB.Data.Migrations
 
             modelBuilder.Entity("TP_PWEB.Models.Reservation", b =>
                 {
-                    b.HasOne("TP_PWEB.Models.Evaluation", "ClientEvaluation")
-                        .WithMany()
-                        .HasForeignKey("ClientEvaluationId");
-
                     b.HasOne("TP_PWEB.Models.Client", "Client")
                         .WithMany("Reservations")
                         .HasForeignKey("ClientId")
@@ -434,18 +451,20 @@ namespace TP_PWEB.Data.Migrations
                         .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("TP_PWEB.Models.Evaluation", "StayEvaluation")
-                        .WithMany()
-                        .HasForeignKey("StayEvaluationId");
                 });
 
             modelBuilder.Entity("TP_PWEB.Models.Verification", b =>
                 {
-                    b.HasOne("TP_PWEB.Models.Property", "Property")
-                        .WithMany("Verifications")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("TP_PWEB.Models.Property", "EntranceProperty")
+                        .WithMany("EntranceVerifications")
+                        .HasForeignKey("EntrancePropertyId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("TP_PWEB.Models.Property", "ExitProperty")
+                        .WithMany("ExitVerifications")
+                        .HasForeignKey("ExitPropertyId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
