@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TP_PWEB.Data;
 
 namespace TP_PWEB.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220112150329_EvaluationV1.12")]
+    partial class EvaluationV112
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -215,148 +217,6 @@ namespace TP_PWEB.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("TP_PWEB.Models.Client", b =>
-                {
-                    b.Property<string>("ClientId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ClientId");
-
-                    b.ToTable("Clients");
-                });
-
-            modelBuilder.Entity("TP_PWEB.Models.Evaluation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Commentary")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Rating")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Evaluations");
-                });
-
-            modelBuilder.Entity("TP_PWEB.Models.Property", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Comodities")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OwnerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("Properties");
-                });
-
-            modelBuilder.Entity("TP_PWEB.Models.PropertyManager", b =>
-                {
-                    b.Property<string>("PropertyManagerId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("PropertyManagerId");
-
-                    b.ToTable("propertyManagers");
-                });
-
-            modelBuilder.Entity("TP_PWEB.Models.Reservation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ClientEvaluationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PropertyId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("StayEvaluationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientEvaluationId");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("PropertyId");
-
-                    b.HasIndex("StayEvaluationId");
-
-                    b.ToTable("Reservations");
-                });
-
-            modelBuilder.Entity("TP_PWEB.Models.Verification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Observation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PropertyId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isAtExit")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("isChecked")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PropertyId");
-
-                    b.ToTable("Verifications");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -404,47 +264,6 @@ namespace TP_PWEB.Data.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TP_PWEB.Models.Property", b =>
-                {
-                    b.HasOne("TP_PWEB.Models.PropertyManager", "PropertyManager")
-                        .WithMany("Properties")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TP_PWEB.Models.Reservation", b =>
-                {
-                    b.HasOne("TP_PWEB.Models.Evaluation", "ClientEvaluation")
-                        .WithMany()
-                        .HasForeignKey("ClientEvaluationId");
-
-                    b.HasOne("TP_PWEB.Models.Client", "Client")
-                        .WithMany("Reservations")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TP_PWEB.Models.Property", "Property")
-                        .WithMany("Reservations")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TP_PWEB.Models.Evaluation", "StayEvaluation")
-                        .WithMany()
-                        .HasForeignKey("StayEvaluationId");
-                });
-
-            modelBuilder.Entity("TP_PWEB.Models.Verification", b =>
-                {
-                    b.HasOne("TP_PWEB.Models.Property", "Property")
-                        .WithMany("Verifications")
-                        .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

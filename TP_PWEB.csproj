@@ -47,6 +47,18 @@
     <Compile Remove="Data\Migrations\20220112131832_EvaluationV1.11.Designer.cs" />
     <Compile Remove="Data\Migrations\20220112133211_EvaluationV1.11.cs" />
     <Compile Remove="Data\Migrations\20220112133211_EvaluationV1.11.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220112133759_EvaluationV1.11.cs" />
+    <Compile Remove="Data\Migrations\20220112133759_EvaluationV1.11.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220112135155_EvaluationV1.11.cs" />
+    <Compile Remove="Data\Migrations\20220112135155_EvaluationV1.11.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220112151023_ReservationV1.2.cs" />
+    <Compile Remove="Data\Migrations\20220112151023_ReservationV1.2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220112151112_ReservationV1.2.cs" />
+    <Compile Remove="Data\Migrations\20220112151112_ReservationV1.2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220112151214_ReservationV1.2.cs" />
+    <Compile Remove="Data\Migrations\20220112151214_ReservationV1.2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220112151232_ReservationV1.2.cs" />
+    <Compile Remove="Data\Migrations\20220112151232_ReservationV1.2.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -10,8 +10,8 @@ using TP_PWEB.Data;
 namespace TP_PWEB.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220112133759_EvaluationV1.11")]
-    partial class EvaluationV111
+    [Migration("20220112151259_ReservationV1.2")]
+    partial class ReservationV12
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -242,7 +242,7 @@ namespace TP_PWEB.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Evaluation");
+                    b.ToTable("Evaluations");
                 });
 
             modelBuilder.Entity("TP_PWEB.Models.Property", b =>
@@ -286,7 +286,7 @@ namespace TP_PWEB.Data.Migrations
 
                     b.HasKey("PropertyManagerId");
 
-                    b.ToTable("PropertyManager");
+                    b.ToTable("propertyManagers");
                 });
 
             modelBuilder.Entity("TP_PWEB.Models.Reservation", b =>
@@ -325,7 +325,7 @@ namespace TP_PWEB.Data.Migrations
 
                     b.HasIndex("StayEvaluationId");
 
-                    b.ToTable("Reservation");
+                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("TP_PWEB.Models.Verification", b =>
@@ -356,7 +356,7 @@ namespace TP_PWEB.Data.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("Verification");
+                    b.ToTable("Verifications");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

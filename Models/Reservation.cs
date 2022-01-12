@@ -18,8 +18,10 @@ namespace TP_PWEB.Models
         [Required]
         public DateTime EndDate { get; set; }
 
+        //[ForeignKey("StayEvaluationId")]
         public virtual Evaluation StayEvaluation { get; set; }
 
+        //[ForeignKey("ClientEvaluationId")]
         public virtual Evaluation ClientEvaluation { get; set; }
 
 

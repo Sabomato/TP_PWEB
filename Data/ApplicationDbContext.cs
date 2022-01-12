@@ -58,9 +58,16 @@ namespace TP_PWEB.Data
         }
         public DbSet<Property> Properties { get; set; }
 
-        public DbSet<Property> Reservations { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
 
         public DbSet<Client> Clients { get; set; }
+
+        public DbSet<PropertyManager> PropertyManagers { get; set; }
+
+        public DbSet<Verification> Verifications{ get; set; }
+
+        public DbSet<Evaluation> Evaluations { get; set; }
+
     }
 
     

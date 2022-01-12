@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TP_PWEB.Data;
 
 namespace TP_PWEB.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220112150736_EvaluationV1.13")]
+    partial class EvaluationV113
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -323,7 +325,7 @@ namespace TP_PWEB.Data.Migrations
 
                     b.HasIndex("StayEvaluationId");
 
-                    b.ToTable("Reservations");
+                    b.ToTable("Reservation");
                 });
 
             modelBuilder.Entity("TP_PWEB.Models.Verification", b =>
