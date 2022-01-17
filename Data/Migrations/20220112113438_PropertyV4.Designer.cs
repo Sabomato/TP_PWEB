@@ -257,7 +257,7 @@ namespace TP_PWEB.Data.Migrations
                     b.ToTable("Evaluation");
                 });
 
-            modelBuilder.Entity("TP_PWEB.Models.Property", b =>
+            modelBuilder.Entity("TP_PWEB.Models.Properties.Property", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -422,7 +422,7 @@ namespace TP_PWEB.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction);
                 });
 
-            modelBuilder.Entity("TP_PWEB.Models.Property", b =>
+            modelBuilder.Entity("TP_PWEB.Models.Properties.Property", b =>
                 {
                     b.HasOne("TP_PWEB.Models.PropertyManager", "PropertyManager")
                         .WithMany("Properties")
@@ -439,7 +439,7 @@ namespace TP_PWEB.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TP_PWEB.Models.Property", "Property")
+                    b.HasOne("TP_PWEB.Models.Properties.Property", "Property")
                         .WithMany("Reservations")
                         .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -448,7 +448,7 @@ namespace TP_PWEB.Data.Migrations
 
             modelBuilder.Entity("TP_PWEB.Models.Verification", b =>
                 {
-                    b.HasOne("TP_PWEB.Models.Property", "Property")
+                    b.HasOne("TP_PWEB.Models.Properties.Property", "Property")
                         .WithMany("Verifications")
                         .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)

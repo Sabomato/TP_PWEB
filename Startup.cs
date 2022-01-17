@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TP_PWEB.Data;
+using TP_PWEB.Helpers;
+using TP_PWEB.Models;
 using TP_PWEB.Services;
 
 namespace TP_PWEB
@@ -49,7 +51,67 @@ namespace TP_PWEB
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
+        /*
+        private async Task CreateTestUsers(IServiceProvider serviceProvider)
+        {
+            var roleNames = Configuration.GetSection("Roles").Get<string[]>();
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            IdentityUser createdUser;
+            var users = new IdentityUser[]
+            {
+                  new IdentityUser()
+                  {
+                      Email = "PropertyManager1@email.com",
+                      UserName = "PropertyManager1@email.com"
+                  },
+                 new IdentityUser()
+                  {
+                      Email = "Client1@email.com",
+                      UserName = "Client1@email.com"
+                  },
+                 new IdentityUser()
+                  {
+                      Email = "PropertyEmployee1@email.com",
+                      UserName = "PropertyEmployee1@email.com"
+                  }
+            };
 
+            createdUser = await CreateUserWithRole(users[0], UserManager, RoleNames.PropertyOwner);
+
+          
+            //context.
+
+
+            await CreateUserWithRole(users[1], UserManager, RoleNames.Client);
+            await CreateUserWithRole(users[2], UserManager, RoleNames.PropertyEmployee);
+           
+
+        }
+        private async Task<IdentityUser> CreateUserWithRole(IdentityUser user,UserManager<IdentityUser>userManager,string roleName, ApplicationDbContext context)
+        {
+           var userResult = await userManager.FindByEmailAsync(user.Email);
+
+            if (userResult == null)
+            {
+                var createUser = await userManager.CreateAsync(user, user.UserName);
+                if (createUser.Succeeded)
+                {
+                    //here we tie the new user to the role
+                    await userManager.AddToRoleAsync(user, roleName);
+
+                    var createdUser  = await userManager.FindByEmailAsync(user.Email);
+
+                    context.PropertyManagers.Add(new PropertyManager
+                    {
+                        User = createdUser
+                    });
+                    context.Users.
+                }
+            }
+            return null;
+        }
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
             var roleNames = Configuration.GetSection("Roles").Get<string[]>();
@@ -58,7 +120,7 @@ namespace TP_PWEB
             IdentityResult roleResult;
 
 
-            foreach (var roleName in roleNames )
+            foreach (var roleName in roleNames)
             {
 
 
@@ -99,7 +161,7 @@ namespace TP_PWEB
                 }
             }
         }
-        
+        */
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
@@ -122,10 +184,10 @@ namespace TP_PWEB
 
             app.UseAuthentication();
             app.UseAuthorization();
-            
-            
-            
-            CreateRoles(serviceProvider).Wait();
+
+
+
+            DatabaseSeeding.Seed(serviceProvider).Wait();
 
             app.UseEndpoints(endpoints =>
             {

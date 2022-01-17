@@ -59,6 +59,26 @@
     <Compile Remove="Data\Migrations\20220112151214_ReservationV1.2.Designer.cs" />
     <Compile Remove="Data\Migrations\20220112151232_ReservationV1.2.cs" />
     <Compile Remove="Data\Migrations\20220112151232_ReservationV1.2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220116185850_ReservationV6.cs" />
+    <Compile Remove="Data\Migrations\20220116185850_ReservationV6.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220116214645_PropertyV7.cs" />
+    <Compile Remove="Data\Migrations\20220116214645_PropertyV7.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220116215141_PropertyV7.cs" />
+    <Compile Remove="Data\Migrations\20220116215141_PropertyV7.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220116224910_PropertyV7.cs" />
+    <Compile Remove="Data\Migrations\20220116224910_PropertyV7.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220117001537_ImageV1.cs" />
+    <Compile Remove="Data\Migrations\20220117001537_ImageV1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220117003120_ImageV2.cs" />
+    <Compile Remove="Data\Migrations\20220117003120_ImageV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220117004245_ImageV2.cs" />
+    <Compile Remove="Data\Migrations\20220117004245_ImageV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220117004636_ImageV2.cs" />
+    <Compile Remove="Data\Migrations\20220117004636_ImageV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220117004825_ImageV2.cs" />
+    <Compile Remove="Data\Migrations\20220117004825_ImageV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220117011026_ImagesV3.cs" />
+    <Compile Remove="Data\Migrations\20220117011026_ImagesV3.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

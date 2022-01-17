@@ -11,7 +11,7 @@ namespace TP_PWEB.Models
   
     public class Evaluation
     {
-        
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]

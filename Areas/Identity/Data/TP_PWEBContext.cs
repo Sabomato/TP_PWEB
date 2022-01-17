@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TP_PWEB.Models;
+using TP_PWEB.Models.Properties;
 
 namespace TP_PWEB.Data
 {

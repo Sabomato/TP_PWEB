@@ -257,7 +257,7 @@ namespace TP_PWEB.Data.Migrations
                     b.ToTable("Evaluation");
                 });
 
-            modelBuilder.Entity("TP_PWEB.Models.Property", b =>
+            modelBuilder.Entity("TP_PWEB.Models.Properties.Property", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -429,7 +429,7 @@ namespace TP_PWEB.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TP_PWEB.Models.Property", b =>
+            modelBuilder.Entity("TP_PWEB.Models.Properties.Property", b =>
                 {
                     b.HasOne("TP_PWEB.Models.PropertyManager", "PropertyManager")
                         .WithMany("Properties")
@@ -446,7 +446,7 @@ namespace TP_PWEB.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TP_PWEB.Models.Property", "Property")
+                    b.HasOne("TP_PWEB.Models.Properties.Property", "Property")
                         .WithMany("Reservations")
                         .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -455,13 +455,13 @@ namespace TP_PWEB.Data.Migrations
 
             modelBuilder.Entity("TP_PWEB.Models.Verification", b =>
                 {
-                    b.HasOne("TP_PWEB.Models.Property", "EntranceProperty")
+                    b.HasOne("TP_PWEB.Models.Properties.Property", "EntranceProperty")
                         .WithMany("EntranceVerifications")
                         .HasForeignKey("EntrancePropertyId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("TP_PWEB.Models.Property", "ExitProperty")
+                    b.HasOne("TP_PWEB.Models.Properties.Property", "ExitProperty")
                         .WithMany("ExitVerifications")
                         .HasForeignKey("ExitPropertyId")
                         .OnDelete(DeleteBehavior.NoAction)

@@ -249,7 +249,7 @@ namespace TP_PWEB.Data.Migrations
                     b.ToTable("Evaluation");
                 });
 
-            modelBuilder.Entity("TP_PWEB.Models.Property", b =>
+            modelBuilder.Entity("TP_PWEB.Models.Properties.Property", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -368,7 +368,7 @@ namespace TP_PWEB.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TP_PWEB.Models.Property", b =>
+            modelBuilder.Entity("TP_PWEB.Models.Properties.Property", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Owner")
                         .WithMany()
@@ -449,7 +449,7 @@ namespace TP_PWEB.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TP_PWEB.Models.Property", null)
+                    b.HasOne("TP_PWEB.Models.Properties.Property", null)
                         .WithMany("Reservations")
                         .HasForeignKey("PropertyId");
                 });

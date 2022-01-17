@@ -215,6 +215,32 @@ namespace TP_PWEB.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("TP_PWEB.Models.Admin", b =>
+                {
+                    b.Property<string>("AdminId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("AdminId");
+
+                    b.ToTable("Admins");
+                });
+
+            modelBuilder.Entity("TP_PWEB.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("TP_PWEB.Models.Client", b =>
                 {
                     b.Property<string>("ClientId")
@@ -243,12 +269,49 @@ namespace TP_PWEB.Data.Migrations
                     b.ToTable("Evaluations");
                 });
 
-            modelBuilder.Entity("TP_PWEB.Models.Property", b =>
+            modelBuilder.Entity("TP_PWEB.Models.Image", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("Content")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PropertyId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("VerificationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PropertyId");
+
+                    b.HasIndex("VerificationId");
+
+                    b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("TP_PWEB.Models.Properties.Property", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Comodities")
                         .IsRequired()
@@ -272,6 +335,9 @@ namespace TP_PWEB.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId")
+                        .IsUnique();
+
                     b.HasIndex("OwnerId");
 
                     b.ToTable("Properties");
@@ -284,7 +350,7 @@ namespace TP_PWEB.Data.Migrations
 
                     b.HasKey("PropertyManagerId");
 
-                    b.ToTable("propertyManagers");
+                    b.ToTable("PropertyManagers");
                 });
 
             modelBuilder.Entity("TP_PWEB.Models.Reservation", b =>
@@ -303,6 +369,12 @@ namespace TP_PWEB.Data.Migrations
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDelivered")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsReceived")
+                        .HasColumnType("bit");
 
                     b.Property<int>("PropertyId")
                         .HasColumnType("int");
@@ -333,6 +405,12 @@ namespace TP_PWEB.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("IsAtExit")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsChecked")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -344,15 +422,14 @@ namespace TP_PWEB.Data.Migrations
                     b.Property<int>("PropertyId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("isAtExit")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("isChecked")
-                        .HasColumnType("bit");
+                    b.Property<int?>("ReservationId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PropertyId");
+
+                    b.HasIndex("ReservationId");
 
                     b.ToTable("Verifications");
                 });
@@ -408,8 +485,26 @@ namespace TP_PWEB.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TP_PWEB.Models.Property", b =>
+            modelBuilder.Entity("TP_PWEB.Models.Image", b =>
                 {
+                    b.HasOne("TP_PWEB.Models.Properties.Property", "Property")
+                        .WithMany("Images")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("TP_PWEB.Models.Verification", "Verification")
+                        .WithMany("Images")
+                        .HasForeignKey("VerificationId");
+                });
+
+            modelBuilder.Entity("TP_PWEB.Models.Properties.Property", b =>
+                {
+                    b.HasOne("TP_PWEB.Models.Category", "Category")
+                        .WithOne()
+                        .HasForeignKey("TP_PWEB.Models.Properties.Property", "CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TP_PWEB.Models.PropertyManager", "PropertyManager")
                         .WithMany("Properties")
                         .HasForeignKey("OwnerId")
@@ -429,7 +524,7 @@ namespace TP_PWEB.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TP_PWEB.Models.Property", "Property")
+                    b.HasOne("TP_PWEB.Models.Properties.Property", "Property")
                         .WithMany("Reservations")
                         .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -442,11 +537,15 @@ namespace TP_PWEB.Data.Migrations
 
             modelBuilder.Entity("TP_PWEB.Models.Verification", b =>
                 {
-                    b.HasOne("TP_PWEB.Models.Property", "Property")
+                    b.HasOne("TP_PWEB.Models.Properties.Property", "Property")
                         .WithMany("Verifications")
                         .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("TP_PWEB.Models.Reservation", null)
+                        .WithMany("Verifications")
+                        .HasForeignKey("ReservationId");
                 });
 #pragma warning restore 612, 618
         }

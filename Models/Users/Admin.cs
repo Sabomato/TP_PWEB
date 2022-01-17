@@ -8,17 +8,15 @@ using System.Threading.Tasks;
 
 namespace TP_PWEB.Models
 {
-    public class PropertyManager
+    public class Admin
     {
+
         [Required]
         [Key, ForeignKey(nameof(IdentityUser))]
-        public string PropertyManagerId { get; set; }
+        public string AdminId { get; set; }
 
         public IdentityUser User;
 
-
-
-        public virtual ICollection<Property> Properties{ get; set; }
 
     }
 }
