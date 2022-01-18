@@ -18,34 +18,14 @@
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsChecked" /> @Html.DisplayNameFor(model => model.IsChecked)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsAtExit" /> @Html.DisplayNameFor(model => model.IsAtExit)
-                </label>
-            </div>
+            <br/>
             <div class="form-group">
-                <label asp-for="Observation" class="control-label"></label>
-                <input asp-for="Observation" class="form-control" />
-                <span asp-validation-for="Observation" class="text-danger"></span>
+                <label asp-for="@Model.IsAtExit" class="form-control" />
+                <select asp-for="@Model.IsAtExit" asp-items="@Model.Type" class="form-control">
+                    <option selected value="">Please select the moment of verification</option>
+                </select>
             </div>
-            <div class="form-group">
-                <label asp-for="PropertyId" class="control-label"></label>
-                <select asp-for="PropertyId" class="form-control" asp-items="ViewBag.PropertyId"></select>
-                <span asp-validation-for="PropertyId" class="text-danger"></span>
-            </div>
-
-            @*//Adicionar ViewModel para receber imagens
-            <div class="form-group">
-            <label asp-for="@Model." class="form-control" />
-            <input type="file" asp-for="@Model.ImagesForms" class="form-control" multiple required />
-
-        </div>
-            *@
+            <br />
 
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -55,7 +35,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to Checklist</a>
 </div>
 
 @section Scripts {

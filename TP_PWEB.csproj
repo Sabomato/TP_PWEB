@@ -79,6 +79,10 @@
     <Compile Remove="Data\Migrations\20220117004825_ImageV2.Designer.cs" />
     <Compile Remove="Data\Migrations\20220117011026_ImagesV3.cs" />
     <Compile Remove="Data\Migrations\20220117011026_ImagesV3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220118124954_VerficationReservationV1.cs" />
+    <Compile Remove="Data\Migrations\20220118124954_VerficationReservationV1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220118125112_VerficationReservationV1.cs" />
+    <Compile Remove="Data\Migrations\20220118125112_VerficationReservationV1.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

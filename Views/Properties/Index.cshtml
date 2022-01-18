@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -34,7 +34,7 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-    var url = @Url.Action("GetImage", new { imageId = item.Images.First().Id });
+    var url = @Url.Action("GetImage", new { imageId = item.CoverImage.Id });
         <tr>
             <td>
                 <div class="row">
@@ -44,17 +44,18 @@
 
                     </div>
                     <div class="col-sm">
-                        @Html.DisplayFor(modelItem => item.Title)
+                        <bold>@Html.DisplayFor(modelItem => item.Title)</bold>
                         <br />
                         @Html.DisplayFor(modelItem => item.Description)
 
                     </div>
                     <div class="col-sm">
                         @*adicionar rating*@
-                        @Html.DisplayFor(modelItem => item.Price)
+                        @Html.DisplayFor(modelItem => item.Rating)/10
                         <br />
                         @Html.DisplayFor(modelItem => item.Comodities)
                         <br />
+
                         @if (User.IsInRole(RoleNames.PropertyOwner))
                         {
                             <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>

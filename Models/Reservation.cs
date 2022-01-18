@@ -16,6 +16,9 @@ namespace TP_PWEB.Models
         public int Id { get; set; }
 
         [Required]
+        public bool IsAccepted { get; set; }
+
+        [Required]
         public bool IsDelivered { get; set; }
 
         [Required]

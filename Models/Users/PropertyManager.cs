@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using TP_PWEB.Models.Properties;
+using TP_PWEB.Models.Users;
 
 namespace TP_PWEB.Models
 {
@@ -18,6 +19,8 @@ namespace TP_PWEB.Models
         public IdentityUser User;
 
         public virtual ICollection<Property> Properties{ get; set; }
+
+        public virtual ICollection<PropertyEmployee> PropertyEmployees { get; set; }
 
        // public PropertyManager(IdentityUser user)
         //{

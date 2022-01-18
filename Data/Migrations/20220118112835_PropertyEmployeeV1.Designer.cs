@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TP_PWEB.Data;
 
 namespace TP_PWEB.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220118112835_PropertyEmployeeV1")]
+    partial class PropertyEmployeeV1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -294,16 +296,11 @@ namespace TP_PWEB.Data.Migrations
                     b.Property<int?>("VerificationId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("VerificationReservationId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PropertyId");
 
                     b.HasIndex("VerificationId");
-
-                    b.HasIndex("VerificationReservationId");
 
                     b.ToTable("Images");
                 });
@@ -415,7 +412,7 @@ namespace TP_PWEB.Data.Migrations
 
                     b.HasIndex("PropertyManagerId");
 
-                    b.ToTable("PropertyEmployees");
+                    b.ToTable("PropertyEmployee");
                 });
 
             modelBuilder.Entity("TP_PWEB.Models.Verification", b =>
@@ -428,8 +425,14 @@ namespace TP_PWEB.Data.Migrations
                     b.Property<bool>("IsAtExit")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsChecked")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Observation")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PropertyId")
@@ -438,9 +441,6 @@ namespace TP_PWEB.Data.Migrations
                     b.Property<int?>("ReservationId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PropertyId");
@@ -448,34 +448,6 @@ namespace TP_PWEB.Data.Migrations
                     b.HasIndex("ReservationId");
 
                     b.ToTable("Verifications");
-                });
-
-            modelBuilder.Entity("TP_PWEB.Models.VerificationReservation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("IsChecked")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Observation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReservationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("VerificationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReservationId");
-
-                    b.HasIndex("VerificationId");
-
-                    b.ToTable("VerificationReservations");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -537,12 +509,8 @@ namespace TP_PWEB.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("TP_PWEB.Models.Verification", "Verification")
-                        .WithMany()
-                        .HasForeignKey("VerificationId");
-
-                    b.HasOne("TP_PWEB.Models.VerificationReservation", null)
                         .WithMany("Images")
-                        .HasForeignKey("VerificationReservationId");
+                        .HasForeignKey("VerificationId");
                 });
 
             modelBuilder.Entity("TP_PWEB.Models.Properties.Property", b =>
@@ -601,21 +569,6 @@ namespace TP_PWEB.Data.Migrations
                     b.HasOne("TP_PWEB.Models.Reservation", null)
                         .WithMany("Verifications")
                         .HasForeignKey("ReservationId");
-                });
-
-            modelBuilder.Entity("TP_PWEB.Models.VerificationReservation", b =>
-                {
-                    b.HasOne("TP_PWEB.Models.Reservation", "Reservation")
-                        .WithMany()
-                        .HasForeignKey("ReservationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TP_PWEB.Models.Verification", "Verification")
-                        .WithMany()
-                        .HasForeignKey("VerificationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

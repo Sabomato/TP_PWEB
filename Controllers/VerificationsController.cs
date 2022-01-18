@@ -13,7 +13,7 @@ using static TP_PWEB.Models.RoleNames;
 
 namespace TP_PWEB.Controllers
 {
-    [Authorize(Roles = PropertyOwner + "," + PropertyEmployee)]
+    [Authorize(Roles = PropertyOwner)]
 
     public class VerificationsController : Controller
     {
@@ -24,17 +24,41 @@ namespace TP_PWEB.Controllers
             _context = context;
 
         }
-       
-        // GET: Verifications
-        public async Task<IActionResult> Index(Property property)
+        
+        private async Task<IActionResult> IndexProperty(int propertyId)
         {
-            if (_context.GetCurrentUserId() != property.OwnerId)
+          
+
+            var property = await GetPropertyAsync(propertyId);
+            if (property == null)
+                return NotFound();
+
+            if (_context.UserId != property.OwnerId)
                 return NotFound();
 
             var verifications = _context.Verifications
-                .Where(p => p.PropertyId == property.Id);
-                
+            .Where(p => p.PropertyId == property.Id && p.isDeleted == false);
+
+            ViewData["Title"] = "Verification for " + property.Title;
+            ViewData["propertyId"] = property.Id;
+            ViewData["ownerId"] = property.OwnerId;
             return View(await verifications.ToListAsync());
+        
+        }
+
+
+
+        // GET: Verifications
+        public async Task<IActionResult> Index(int? propertyId)
+        {
+            if (propertyId != null)
+            {
+                return await IndexProperty((int)propertyId);
+            }
+
+            return NotFound();
+
+            
         }
 
         // GET: Verifications/Details/5
@@ -62,32 +86,22 @@ namespace TP_PWEB.Controllers
         }
 
         // GET: Verifications/Create
+        
         [ActionName("Create")]
-        public async Task<IActionResult> CreateAsync(Property property)
+        public IActionResult Create(string ownerId, int propertyId)
         {
-            if (_context.GetCurrentUserId() != property.OwnerId)
+
+            if (_context.UserId != ownerId)
                 return NotFound();
-
-            List<Verification> verifications = await _context.Verifications
-                .Where(v => v.PropertyId == property.Id)
-                .ToListAsync();
-
-            VerificationCreateViewModel verification;
-
-            if (verifications != null)
+          
+            Verification verification = new Verification()
             {
-                verification = new VerificationCreateViewModel();
-                verification.NewVerification.PropertyId = property.Id;
+                PropertyId = propertyId,
+                isDeleted = false
+            };
+            //verification.IsChecked = false;
 
-            }
-            else
-            {
-                return RedirectToAction(nameof(Index));
-            }
-
-            //model.PropertyManager
-
-            return View();
+            return View(verification);
 
         }
 
@@ -96,15 +110,17 @@ namespace TP_PWEB.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,IsChecked,IsAtExit,Observation,PropertyId")] Verification verification)
+        public async Task<IActionResult> Create([Bind("Id,Name,IsAtExit,PropertyId")] Verification verification, bool addAnother)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(verification);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                
+                return addAnother ?
+                    RedirectToAction("Create") : RedirectToAction(nameof(Details),"Properties", new {id = verification.PropertyId});
             }
-            ViewData["PropertyId"] = new SelectList(_context.Properties, "Id", "Comodities", verification.PropertyId);
+            
             return View(verification);
         }
 
@@ -130,7 +146,7 @@ namespace TP_PWEB.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IsChecked,IsAtExit,Observation,PropertyId")] Verification verification)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IsAtExit,PropertyId")] Verification verification)
         {
             if (id != verification.Id)
             {
@@ -157,7 +173,6 @@ namespace TP_PWEB.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PropertyId"] = new SelectList(_context.Properties, "Id", "Comodities", verification.PropertyId);
             return View(verification);
         }
 
@@ -186,7 +201,8 @@ namespace TP_PWEB.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var verification = await _context.Verifications.FindAsync(id);
-            _context.Verifications.Remove(verification);
+            verification.isDeleted = true;
+            _context.Verifications.Update(verification);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

@@ -33,6 +33,19 @@ namespace TP_PWEB.Controllers
             
         }
 
+        public double GetRating(Property property)
+        {
+            double rating = 0;
+
+            foreach (var reservation in property.Reservations)
+            {
+                rating += reservation.StayEvaluation.Rating;
+            }
+            //Retorna Nan se property.Reservations.Count == 0 (0/0), mas faz sentido no contexto
+            return rating /  property.Reservations.Count;
+        }
+
+
         [Authorize(Roles = RoleNames.PropertyOwner)]
         // GET: Properties
         public async Task<IActionResult> Index()
@@ -41,7 +54,7 @@ namespace TP_PWEB.Controllers
 
             if (User.IsInRole(RoleNames.PropertyOwner)) {
                 properties = _context.Properties
-                    .Where(p => p.PropertyManager.PropertyManagerId == UserId);
+                    .Where(p => p.PropertyManager.PropertyManagerId == UserId).Include(p=>p.Reservations);
                                 
             }
             else
@@ -49,7 +62,8 @@ namespace TP_PWEB.Controllers
 
             foreach (var property in properties)
             {
-                property.Rating = 9.5;
+                property.Rating = GetRating(property);
+
                 property.CoverImage = await _context.Images.FirstAsync(i => i.Property.Id == property.Id);
             }
 
@@ -125,7 +139,8 @@ namespace TP_PWEB.Controllers
                               
                 _context.Add(@property);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Create","Verifications",
+                    new {propertyId = property.Id,ownerId = property.OwnerId });
             }
 
             return View(@property);

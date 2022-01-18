@@ -1,13 +1,11 @@
 ﻿@model IEnumerable<TP_PWEB.Models.Verification>
 
-@{
-    ViewData["Title"] = "Index";
-}
 
-<h1>Index</h1>
+
+<h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" asp-route-ownerId ="@ViewData["ownerId"]" asp-route-propertyId="@ViewData["propertyId"]">Add a Verification</a>
 </p>
 <table class="table">
     <thead>
@@ -15,17 +13,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
+
             <th>
-                @Html.DisplayNameFor(model => model.IsChecked)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsAtExit)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Observation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Property)
+                @Html.DisplayNameFor(model => model.Moment)
             </th>
             <th></th>
         </tr>
@@ -37,21 +27,21 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IsChecked)
+                @Html.DisplayFor(modelItem => item.Moment)
             </td>
+            
             <td>
-                @Html.DisplayFor(modelItem => item.IsAtExit)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Observation)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Property.Comodities)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+
+                @if (User.IsInRole(RoleNames.PropertyOwner))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit </a>
+                    <br />
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete </a>
+                    <br />
+                }
+
+                @*<a asp-action="Details" asp-route-id="@item.Id">Details</a>*@
+
             </td>
         </tr>
 }

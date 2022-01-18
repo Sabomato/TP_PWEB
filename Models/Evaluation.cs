@@ -15,7 +15,7 @@ namespace TP_PWEB.Models
         public int Id { get; set; }
 
         [Required]
-        [Range(0, 5)]
+        [Range(0, 10)]
         public double Rating { get; set; }
 
         public string Commentary { get; set; }
