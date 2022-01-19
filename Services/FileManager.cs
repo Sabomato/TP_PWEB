@@ -23,7 +23,7 @@ namespace TP_PWEB.Services
                 var contentType = file.ContentType;
                 var extension = Path.GetExtension(file.FileName);
 
-                if (!extension.Equals(".jpg") && !extension.Equals(".png"))
+                if (!extension.Equals(".jpg") && !extension.Equals(".png") && !extension.Equals(".jpeg"))
                     continue;
 
                 var image = new Image
@@ -43,5 +43,6 @@ namespace TP_PWEB.Services
             
             return Images;
         }
+
     }
 }

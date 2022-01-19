@@ -24,28 +24,7 @@ namespace TP_PWEB.Controllers
             _context = context;
         }
 
-        private async Task<Reservation> GetReservationAsync(int? reservationId)
-        {
-            return reservationId != null ? await _context.Reservations.FindAsync(reservationId) : null;
-        }
-
-        private async Task<Property> GetPropertyAsync(int? propertyId)
-        {
-
-            return propertyId != null ? await _context.Properties.FindAsync(propertyId) : null;
-        }
-        private async Task<bool> IsEmployeeAsync (int reservationId)
-        {
-            var reservation = await GetReservationAsync(reservationId);
-
-            var reservationProperty = await GetPropertyAsync(reservation.PropertyId);
-
-            return await _context.PropertyEmployees
-                .Where(e => e.PropertyManagerId == reservationProperty.OwnerId)
-                .AnyAsync(e => e.PropertyEmployeeId == _context.UserId);
-
-
-        }
+        
 
         // GET: VerificationReservations
         public async Task<IActionResult> Index(int reservationId)
@@ -53,7 +32,7 @@ namespace TP_PWEB.Controllers
         {
            
 
-            if (!await IsEmployeeAsync(reservationId))
+            if (!await _context.IsEmployeeReservationAsync(reservationId))
                 return NotFound();
 
             var verifications = _context.VerificationReservations

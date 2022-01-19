@@ -36,6 +36,7 @@ namespace TP_PWEB.Controllers
         public double GetRating(Property property)
         {
             double rating = 0;
+            //List<Evaluation> evaluations = _context.Evaluations.Where(e=>e.)
 
             foreach (var reservation in property.Reservations)
             {
@@ -56,6 +57,7 @@ namespace TP_PWEB.Controllers
                 properties =await  _context.Properties
                     .Where(p => p.PropertyManager.PropertyManagerId == UserId)
                     .Include(p => p.Reservations)
+                    .Include(p=>p.Category)
                     .ToListAsync();
                                 
             }
@@ -80,6 +82,8 @@ namespace TP_PWEB.Controllers
             {
                 var image = await _context.Images.FindAsync(imageId);
 
+                
+
                 return File(image.Content, image.ContentType);
             }
             //returnar image unknown property
@@ -87,7 +91,29 @@ namespace TP_PWEB.Controllers
 
         }
 
-       
+       public async Task<ICollection<Evaluation>> GetCommentaryAsync(int propertyId)
+        {
+            var reservations = await _context
+                .Reservations
+                .Where(r => r.PropertyId == propertyId)
+                .Include(r => r.StayEvaluation)
+                .Include(r=>r.Client)
+                .ToListAsync();
+            
+            List<Evaluation> evaluations = new List<Evaluation>();
+            reservations.ForEach(
+                value => {
+
+                    value.StayEvaluation.StayTime = (value.EndDate - value.StartDate).Days;
+                    value.StayEvaluation.Username = value.Client.User.UserName;
+                    evaluations.Add(value.StayEvaluation);
+                    
+                    }
+            );
+            
+            return evaluations;
+                        
+        }
 
 
         // GET: Properties/Details/5
@@ -100,17 +126,21 @@ namespace TP_PWEB.Controllers
 
             var @property = await _context.Properties
                 .Include(p => p.PropertyManager)
+                .Include(p=>p.Images)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (@property == null)
             {
                 return NotFound();
             }
             @property.CurrentClientId = _context.UserId;
+            property.StayEvaluations = await  GetCommentaryAsync((int)id);
             return View(@property);
         }
 
         // GET: Properties/Create
         [Authorize(Roles = RoleNames.PropertyOwner)]
+        [ActionName("Create")]
         public async Task<IActionResult> CreateAsync()
         {
             List<Category> categories = await _context.Categories.ToListAsync();
@@ -152,17 +182,40 @@ namespace TP_PWEB.Controllers
             return View(@property);
         }
 
+
+        public async Task<Property> GetFullProperty(int propertyId)
+        {
+            var property = await _context.Properties
+                .Include(p => p.Category)
+                .Include(p => p.PropertyManager)
+                .Include(p => p.Images)
+                .FirstOrDefaultAsync(p => p.Id == propertyId);
+                
+
+            if (property == null)
+                return null;
+
+            property.setCategory(await _context.Categories.ToListAsync());
+
+            return property;
+
+        }
+
+
         // GET: Properties/Edit/5
         [Authorize(Roles = RoleNames.PropertyOwner)]
         public async Task<IActionResult> Edit(int? id)
         {
-            
+
+            if (!await _context.IsEmployeeOrOwnerAsync((int)id))
+                return Unauthorized();
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            var @property = await _context.Properties.FindAsync(id);
+            var @property = await GetFullProperty((int)id);
 
             if (@property == null || property.OwnerId != UserId)
             {
@@ -177,18 +230,27 @@ namespace TP_PWEB.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Price,Comodities,OwnerId")] Property @property)
+        public async Task<IActionResult> Edit( [Bind("Id,Title,Description,Price,Comodities,OwnerId,CategoryId,ImagesForms")] Property @property)
         {
-            if (id != @property.Id)
-            {
+
+            if (property == null)
                 return NotFound();
-            }
+
+            if (_context.UserId != property.OwnerId)
+                return Unauthorized();
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                   if(property.ImagesForms != null)
+                    {
+                        ICollection<Image> images = await FileManager.ConvertImagesAsync(property.ImagesForms);
+                        property.Images = images;
+                    }
+                  
                     _context.Update(@property);
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -204,7 +266,7 @@ namespace TP_PWEB.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OwnerId"] = new SelectList(_context.PropertyManagers, "PropertyManagerId", "PropertyManagerId", @property.OwnerId);
+            
             return View(@property);
         }
 
@@ -216,9 +278,9 @@ namespace TP_PWEB.Controllers
                 return NotFound();
             }
 
-            var @property = await _context.Properties
-                .Include(p => p.PropertyManager)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var @property = await GetFullProperty((int)id);
+            @property.StayEvaluations = await GetCommentaryAsync((int)id);
+
             if (@property == null)
             {
                 return NotFound();

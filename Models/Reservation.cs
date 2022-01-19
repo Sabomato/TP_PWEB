@@ -16,9 +16,11 @@ namespace TP_PWEB.Models
         public int Id { get; set; }
 
         [Required]
+        [Display(Name = "Accepted")]
         public bool IsAccepted { get; set; }
 
         [Required]
+        [Display(Name = "Delivered")]
         public bool IsDelivered { get; set; }
 
         [Required]
@@ -39,15 +41,16 @@ namespace TP_PWEB.Models
 
         public virtual ICollection<VerificationReservation> VerificationReservations{ get; set; }
 
+        [Required]
         public int PropertyId { get; set; }
 
-        [Required]
         [ForeignKey("PropertyId")]
         public virtual Property Property { get; set; }
 
+        [Required]
         public string ClientId { get; set; }
 
-        [Required]
+        
         [ForeignKey("ClientId")]
         public virtual Client Client { get; set; }
 

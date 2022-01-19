@@ -49,6 +49,13 @@
         </form>
     </div>
 </div>
+<div class="row">
+    if(@User.IsInRole(RoleNames.PropertyEmployee)){
+        <partial name="~/Views/VerificationReservations/Index.cshtml" for="@Model.VerificationReservations" />
+    }
+    
+</div>
+
 
 <div>
     <a asp-action="Index">Back to List</a>

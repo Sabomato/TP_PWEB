@@ -6,71 +6,62 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table table-hover">
+@if (User.IsInRole(RoleNames.PropertyOwner))
+{
+    <p>
+        <a asp-action="Create">Register a Property</a>
+    </p>
+
+}
+
+
+<table class="table table-hover ">
     <thead>
         <tr>
-            @*
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Price)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Comodities)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PropertyManager)
-        </th>
-        <th></th>
-                *@
-            </tr>
+           
+        </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-    var url = @Url.Action("GetImage", new { imageId = item.CoverImage.Id });
-        <tr>
-            <td>
-                <div class="row">
-                    <div class="col-sm">
-                        <img src="@url"
-                             width="200" height="200" alt="@item.Title"/>
+        @foreach (var item in Model)
+        {
+            var url = @Url.Action("GetImage", new { imageId = item.CoverImage.Id });
+            <tr>
+                <td>
+                    <div  class="row">
+                        <div class="col-sm">
+                            <img src="@url"
+                                 width="200" height="200" alt="@item.Title" />
 
+                        </div>
+                        <div class="col-sm">
+                            <strong style="font-weight: bold 800; font-size:large">
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </strong>
+                            <br />
+                            <strong style="">
+                                @Html.DisplayFor(modelItem => item.Category.Name)
+                            </strong>
+
+                        </div>
+                        <div class="col-sm">
+                            @*adicionar rating*@
+                            @Html.DisplayFor(modelItem => item.Rating)/10
+                            <br />
+
+
+                            @if (User.IsInRole(RoleNames.PropertyOwner))
+                            {
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                            }
+
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+
+
+                        </div>
                     </div>
-                    <div class="col-sm">
-                        <bold>@Html.DisplayFor(modelItem => item.Title)</bold>
-                        <br />
-                        @Html.DisplayFor(modelItem => item.Description)
-
-                    </div>
-                    <div class="col-sm">
-                        @*adicionar rating*@
-                        @Html.DisplayFor(modelItem => item.Rating)/10
-                        <br />
-                        @Html.DisplayFor(modelItem => item.Comodities)
-                        <br />
-
-                        @if (User.IsInRole(RoleNames.PropertyEmployee)){
-
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                            
-                        }
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                        
-
-                    </div>
-                </div>
-            <td>
-             
-            </td>
-        </tr>
-}
+                
+            </tr>
+        }
     </tbody>
 </table>

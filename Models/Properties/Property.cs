@@ -26,6 +26,7 @@ namespace TP_PWEB.Models.Properties
         
         public int CategoryId { get; set; }
         
+        [Display(Name ="Category")]
         public virtual Category Category { get; set; }
 
         [Required]
@@ -33,6 +34,7 @@ namespace TP_PWEB.Models.Properties
 
         [Required]
         [Display (Name ="Price(€)/Night")]
+        [Range(1,double.MaxValue,ErrorMessage ="The price of the property must be bigger than 1€!"),]
         public double Price { get; set; }
 
         [Required]
@@ -51,14 +53,20 @@ namespace TP_PWEB.Models.Properties
 
         public virtual ICollection<Image> Images { get; set; }
 
+
+
+
+
         [NotMapped]
         public double? Rating { get; set; }
 
         [NotMapped]
-        public SelectList Categories { get; set; }
+        public SelectList Categories { get;set;}
+        
+
 
         [NotMapped]
-        [Required]
+        
         [Display(Name = "Upload Images")]
         public List<IFormFile> ImagesForms { get; set; }
 
@@ -69,12 +77,25 @@ namespace TP_PWEB.Models.Properties
         public string CurrentClientId { get; set; }
 
 
+        [NotMapped]
+        public ICollection<Evaluation> StayEvaluations { get; set; }
+
+        [NotMapped]
+        public string OwnerName { get; set; }
+
         public Property(List<Category> categories)
         {
-            
-            Categories = new SelectList(categories,nameof(Category.Id),nameof(Category.Name));
+
+            setCategory(categories);
             
         }
+
+        public void setCategory(List<Category> categories)
+        {
+            Categories = new SelectList(categories, nameof(Category.Id), nameof(Category.Name));
+        }
+
+
 
         public Property() { }
 

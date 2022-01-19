@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TP_PWEB.Data;
 using TP_PWEB.Models;
-
+using static TP_PWEB.Models.RoleNames;
 namespace TP_PWEB.Controllers
 {
     //Adicionar verficação de login
@@ -55,7 +55,10 @@ namespace TP_PWEB.Controllers
         private async Task<IQueryable<Reservation>> IndexClientAsync(string clientId)
         {
 
-            var client = await _context.Clients.FindAsync(clientId);
+            var client = await _context.Clients
+                .Where(c => c.ClientId == clientId)
+                .Include(c => c.User)
+                .FirstOrDefaultAsync();
 
             if (client == null)
                 return null;
@@ -65,6 +68,8 @@ namespace TP_PWEB.Controllers
                 .Where(r => r.ClientId.Equals(clientId))
                 .Include(r => r.Property)
                 .Include(r => r.Client);
+
+            
 
             ViewData["Title"] = "Reservations Made by " + client.User.UserName;
 
@@ -130,6 +135,8 @@ namespace TP_PWEB.Controllers
             var reservation = await _context.Reservations
                 .Include(r => r.Client)
                 .Include(r => r.Property)
+                .Include(r=> r.ClientEvaluation)
+                .Include(r=> r.StayEvaluation)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (reservation == null)
             {
@@ -154,13 +161,14 @@ namespace TP_PWEB.Controllers
             Reservation reservation = new Reservation()
             {
                 PropertyId = property.Id,
+                ClientId = clientId,
                 Property = property,
                 IsAccepted = false,
                 IsDelivered = false,
                 IsReceived = false,
                 IsAvailable = true,
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddDays(1)
+                StartDate = DateTime.Now.Date,
+                EndDate = DateTime.Now.AddDays(1).Date
             };
 
             ViewData["Title"] = "Make a Reservation in " + property.Title;
@@ -187,12 +195,13 @@ namespace TP_PWEB.Controllers
                 reservation.IsAvailable = false;
             }
 
+
             return View(reservation);
         }
 
         private async Task<bool> IsAvailable(Reservation reservation)
         {
-            return await _context.Reservations
+            return ! await _context.Reservations
                 .Where(r => r.PropertyId == reservation.PropertyId)
                 .Where(r => r.StartDate < reservation.EndDate && r.EndDate > reservation.StartDate)
                 .AnyAsync();
@@ -219,6 +228,7 @@ namespace TP_PWEB.Controllers
         }
 
         // GET: Reservations/Edit/5
+        [Authorize(Roles = PropertyOwner + "," + PropertyEmployee)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -241,6 +251,7 @@ namespace TP_PWEB.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = PropertyOwner + "," + PropertyEmployee)]
         public async Task<IActionResult> Edit(int id, [Bind("Id,IsDelivered,IsReceived,StartDate,EndDate,PropertyId,ClientId")] Reservation reservation)
         {
             if (id != reservation.Id)

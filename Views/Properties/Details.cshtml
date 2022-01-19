@@ -1,63 +1,92 @@
 ﻿@using Microsoft.AspNetCore.Identity
 
 @model TP_PWEB.Models.Properties.Property
-@{
-    ViewData["Title"] = "Details";
-}
 
-<h1>Details</h1>
 
-<div>
-    <h4>Property</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Comodities)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Comodities)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.PropertyManager)
-        </dt>
+<h1>@ViewData["Title"]</h1>
 
-    </dl>
-    @if (User.IsInRole(RoleNames.Client))
-    {
-        <br />
-        <a asp-controller="Reservations" asp-action="Create" asp-route-propertyId="@Model.Id" asp-route-clientId="@Model.CurrentClientId">
-            <input type="button" class="btn btn-primary" value="Reserve" />
-        </a>
-    }
 
-</div>
-<div>
+<div class="justify-content-around">
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
 
     @if (User.IsInRole(RoleNames.PropertyEmployee) || User.IsInRole(RoleNames.PropertyOwner))
     {
-        <a class="btn-" asp-action="Index" asp-controller="Verifications" asp-route-propertyId="@Model.Id">Verifications</a> <div>|</div>
+        <a class="btn-" asp-action="Index" asp-controller="Verifications" asp-route-propertyId="@Model.Id">Verifications</a>
+        <a class="btn-" asp-action="Index" asp-controller="Reservations" asp-route-propertyId="@Model.Id">Reservations</a>
 
     }
 
     <a class="btn-" asp-action="Index" asp-controller="Evaluation" asp-route-propertyId="@Model.Id">Comments</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+<hr />
+<div class="row">
+    <div class="col-sm">
+        @*<h4>Property</h4>*@
+
+
+        <h2>
+            @Html.DisplayFor(model => model.Title)
+        </h2>
+        <br />
+        <div class="col-sm-2">
+            @Html.DisplayFor(model => model.PropertyManager.User.UserName)
+        </div>
+        <p rows="5" cols="50" class="form-control">
+            @Html.DisplayFor(model => model.Description)
+        </p>
+    </div>
+
+    <div class="col-sm">
+        <br />
+        <br />
+        <br />
+
+        <partial name="~/Views/Shared/ImageSlideShow.cshtml" for="@Model.Images" />
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-4 ">
+
+        <br />
+        <div style="font-weight:bold">
+            @Html.DisplayNameFor(model => model.Comodities)
+        </div>
+
+        <p rows="5" cols="50" class="form-control border border-dark">
+            @Html.DisplayFor(model => model.Comodities)
+        </p>
+
+        <div class="border border-dark">
+            @Html.DisplayNameFor(model => model.Price):
+
+
+            @Html.DisplayFor(model => model.Price)
+
+
+            @if (User.IsInRole(RoleNames.Client))
+            {
+                <br />
+                <a asp-controller="Reservations" asp-action="Create" asp-route-propertyId="@Model.Id" asp-route-clientId="@Model.CurrentClientId">
+                    <input type="button" class="btn btn-primary" value="Reserve" />
+                </a>
+            }
+        </div>
+    </div>
+    <div class="col-4 ">
+       
+    </div>
+</div>
+    <br />
+    <br />
+    <hr />
+    <h2>Commentary</h2>
+    <hr />
+
+    <partial name="~/Views/Evaluations/Index.cshtml" for="@Model.StayEvaluations" />
+
+

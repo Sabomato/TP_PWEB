@@ -37,7 +37,7 @@ namespace TP_PWEB.Data
         //public 
         public string GetCurrentUserId()
         {
-            return _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
         public bool IsCurrentUser(string userId)
@@ -49,6 +49,11 @@ namespace TP_PWEB.Data
         {
 
             return propertyId != null ? await this.Properties.FindAsync(propertyId) : null;
+        }
+
+        private async Task<Reservation> GetReservationAsync(int? reservationId)
+        {
+            return reservationId != null ? await this.Reservations.FindAsync(reservationId) : null;
         }
 
         public async Task<bool> IsEmployeeAsync(int propertyId)
@@ -74,14 +79,28 @@ namespace TP_PWEB.Data
             if (property == null)
                 return false;
 
-            return await this.PropertyEmployees
+            var isEmployee = await this.PropertyEmployees
                 .Where(e => e.PropertyManagerId == property.OwnerId)
-                .AnyAsync(e => e.PropertyEmployeeId == this.UserId) 
-                || UserId == property.OwnerId;
+                .AnyAsync(e => e.PropertyEmployeeId == this.UserId);
+            
+              return isEmployee  || UserId == property.OwnerId;
 
 
         }
+        
 
+        public async Task<bool> IsEmployeeReservationAsync(int reservationId)
+        {
+            var reservation = await GetReservationAsync(reservationId);
+
+            var reservationProperty = await GetPropertyAsync(reservation.PropertyId);
+
+            return await this.PropertyEmployees
+                .Where(e => e.PropertyManagerId == reservationProperty.OwnerId)
+                .AnyAsync(e => e.PropertyEmployeeId == this.UserId);
+
+
+        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -117,9 +136,14 @@ namespace TP_PWEB.Data
                 .WithMany()
                 .IsRequired(true)
                 .OnDelete(DeleteBehavior.Restrict);
-                
+/*
+            builder.Entity<Evaluation>()
+               .HasOne(p => p.Property)
+               .WithMany()
+               .IsRequired(true);
 
-            /*
+*/
+           /*
                         builder.Entity<Reservation>().HasOne(e => e.StayEvaluation)
                             .WithOne()
                             .HasForeignKey<Evaluation>()

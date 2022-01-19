@@ -10,9 +10,12 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="OwnerId" />
+
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
@@ -20,29 +23,48 @@
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea style="resize:none" rows="5" cols="50" class="form-control" asp-for="Description"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Comodities" class="control-label"></label>
-                <input asp-for="Comodities" class="form-control" />
+                <textarea style="resize:none" rows="5" cols="50" class="form-control" asp-for="Comodities"></textarea>
                 <span asp-validation-for="Comodities" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="OwnerId" class="control-label"></label>
-                <select asp-for="OwnerId" class="form-control" asp-items="ViewBag.OwnerId"></select>
-                <span asp-validation-for="OwnerId" class="text-danger"></span>
+                <label asp-for="@Model.Category" class="form-control" />
+                <select asp-for="@Model.CategoryId" asp-items="@Model.Categories" class="form-control">
+                    <option value="">Please select the property category</option>
+                </select>
+            </div>
+
+            <br />
+
+            <div class="form-group">
+                <label asp-for="@Model.ImagesForms" class="control-label" />
+                <input type="file" asp-for="@Model.ImagesForms" class="form-control-file" multiple 
+                       accept=".jpg,.png" />
+
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
+
         </form>
     </div>
+
+    <div class="col-md-4">
+        <partial name="~/Views/Shared/ImageSlideShow.cshtml" for="@Model.Images" />
+    </div>
+
 </div>
 
 <div>

@@ -30,7 +30,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Observation" class="control-label"></label>
-                <input asp-for="Observation" class="form-control" />
+                <textarea rows="5" cols="50" class="form-control" placeholder="make an observation" asp-for="Observation"></textarea>
                 <span asp-validation-for="Observation" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -41,7 +41,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back Checklist</a>
 </div>
 
 @section Scripts {

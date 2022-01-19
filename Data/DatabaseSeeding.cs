@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TP_PWEB.Data;
 using TP_PWEB.Models;
+using TP_PWEB.Models.Users;
 
 namespace TP_PWEB.Helpers
 {
@@ -33,6 +34,7 @@ namespace TP_PWEB.Helpers
             var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
             var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
             IdentityUser createdUser;
+            
             var users = new IdentityUser[]
             {
                  new IdentityUser()
@@ -93,6 +95,15 @@ namespace TP_PWEB.Helpers
 
                         case RoleNames.PropertyEmployee:
 
+                            string managerEmail =  String.Format("PropertyManager{0}@email.com",(int)(i/4 + 1));
+                            var manager = await UserManager.FindByEmailAsync(managerEmail);
+
+                            context.PropertyEmployees.Add(new PropertyEmployee()
+                            {
+                                PropertyEmployeeId = createdUser.Id,
+                                User = createdUser,
+                                PropertyManagerId = manager.Id
+                            });
                             break;
 
                     }

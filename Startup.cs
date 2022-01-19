@@ -39,13 +39,13 @@ namespace TP_PWEB
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<IdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                     .AddEntityFrameworkStores<ApplicationDbContext>();
-            
-            
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             
-            services.AddTransient<IEmailSender, EmailSender>();
-            services.Configure<AuthMessageSenderOptions>(Configuration);
+            
+            //services.AddTransient<IEmailSender, EmailSender>();
+            //services.Configure<AuthMessageSenderOptions>(Configuration);
             
 
             services.AddControllersWithViews();
