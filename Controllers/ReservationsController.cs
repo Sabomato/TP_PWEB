@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -138,13 +140,32 @@ namespace TP_PWEB.Controllers
         }
 
         // GET: Reservations/Create
-        public IActionResult Create(int propertyId,int clientId)
+        [Authorize(Roles = RoleNames.Client)]
+        public async Task<IActionResult> CreateAsync(int propertyId,string clientId)
         {
+            if (!_context.IsCurrentUser(clientId))
+                return Unauthorized();
 
-            ViewData["ClientId"] = new SelectList(_context.Clients, "ClientId", "ClientId");
-            ViewData["PropertyId"] = new SelectList(_context.Properties, "Id", "Comodities");
+            var property = await _context.GetPropertyAsync(propertyId);
 
-            return View();
+            if (property == null)
+                return NotFound();
+
+            Reservation reservation = new Reservation()
+            {
+                PropertyId = property.Id,
+                Property = property,
+                IsAccepted = false,
+                IsDelivered = false,
+                IsReceived = false,
+                IsAvailable = true,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(1)
+            };
+
+            ViewData["Title"] = "Make a Reservation in " + property.Title;
+
+            return View(reservation);
         }
 
         // POST: Reservations/Create
@@ -156,13 +177,45 @@ namespace TP_PWEB.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(reservation);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (await IsAvailable(reservation))
+                {
+                    await FillVerificationsAsync(reservation);
+                    _context.Add(reservation);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index),new { clientId = reservation.ClientId });
+                }
+                reservation.IsAvailable = false;
             }
-            ViewData["ClientId"] = new SelectList(_context.Clients, "ClientId", "ClientId", reservation.ClientId);
-            ViewData["PropertyId"] = new SelectList(_context.Properties, "Id", "Comodities", reservation.PropertyId);
+
             return View(reservation);
+        }
+
+        private async Task<bool> IsAvailable(Reservation reservation)
+        {
+            return await _context.Reservations
+                .Where(r => r.PropertyId == reservation.PropertyId)
+                .Where(r => r.StartDate < reservation.EndDate && r.EndDate > reservation.StartDate)
+                .AnyAsync();
+ 
+        }
+
+        private async Task FillVerificationsAsync(Reservation reservation)
+        {
+            List<Verification> verifications = await _context.Verifications
+                .Where(v => v.PropertyId == reservation.PropertyId)
+                .ToListAsync();
+
+            foreach(var verification in verifications)
+            {
+                VerificationReservation verificationReservation = new VerificationReservation()
+                {
+                    IsChecked = false,
+                    Verification = verification
+                };
+
+                reservation.VerificationReservations.Add(verificationReservation);
+            }
+
         }
 
         // GET: Reservations/Edit/5

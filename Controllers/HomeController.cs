@@ -30,9 +30,9 @@ namespace TP_PWEB.Controllers
 
         public IActionResult Index()
         {
-            if(User.IsInRole(RoleNames.PropertyOwner))
-                return RedirectToAction("Index","Properties");
-            return View();
+            //if(User.IsInRole(RoleNames.PropertyOwner))
+            return RedirectToAction("Index","Properties");
+            //return View();
         }
 
         public IActionResult Privacy()

@@ -13,22 +13,22 @@ namespace TP_PWEB.Models.Properties
 
 
 
-        public List<SelectListItem> Categories { get; set; }
+        //public List<SelectListItem> Categories { get; set; }
 
-        [Display (Name = "Upload Images")]
-        public List<IFormFile> ImagesForms { get; set; }
+        //[Display (Name = "Upload Images")]
+        //public List<IFormFile> ImagesForms { get; set; }
 
 
 
         public PropertyCreateViewModel(List<Category> categories)
         {
-
+            /*
             Categories = new List<SelectListItem>();
             foreach (Category category in categories)
             {
                 Categories.Add(new SelectListItem(category.Name, category.Id.ToString()));
             }
-
+            */
         }
         public PropertyCreateViewModel() { }
 

@@ -24,9 +24,11 @@ namespace TP_PWEB.Models
         [Required]
         public bool IsReceived { get; set; }
 
-        [Required]       
+        [Required]   
+        [Display(Name ="From")]
         public DateTime StartDate { get; set; }
         [Required]
+        [Display(Name = "To")]
         public DateTime EndDate { get; set; }
 
         //[ForeignKey("StayEvaluationId")]
@@ -35,7 +37,7 @@ namespace TP_PWEB.Models
         //[ForeignKey("ClientEvaluationId")]
         public virtual Evaluation ClientEvaluation { get; set; }
 
-        public virtual ICollection<Verification> Verifications { get; set; }
+        public virtual ICollection<VerificationReservation> VerificationReservations{ get; set; }
 
         public int PropertyId { get; set; }
 
@@ -48,6 +50,20 @@ namespace TP_PWEB.Models
         [Required]
         [ForeignKey("ClientId")]
         public virtual Client Client { get; set; }
+
+
+        [NotMapped]
+        public bool IsAvailable { get; set; }
+
+        [NotMapped]
+        public string Availability
+        {
+            get
+            {
+                return IsAvailable ? "The property is not available in that period!" : "Available";
+            }
+        }
+
 
     }
 }

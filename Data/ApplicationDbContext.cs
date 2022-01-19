@@ -40,6 +40,11 @@ namespace TP_PWEB.Data
             return _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
 
+        public bool IsCurrentUser(string userId)
+        {
+            return UserId == userId;
+        }
+
         public async Task<Property> GetPropertyAsync(int? propertyId)
         {
 

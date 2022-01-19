@@ -29,7 +29,7 @@ namespace TP_PWEB.Controllers
         {
           
 
-            var property = await GetPropertyAsync(propertyId);
+            var property = await _context.GetPropertyAsync(propertyId);
             if (property == null)
                 return NotFound();
 

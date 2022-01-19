@@ -46,28 +46,31 @@ namespace TP_PWEB.Controllers
         }
 
 
-        [Authorize(Roles = RoleNames.PropertyOwner)]
+        //[Authorize(Roles = RoleNames.PropertyOwner)]
         // GET: Properties
         public async Task<IActionResult> Index()
         {
-            IQueryable<Property> properties;
+            List<Property> properties;
 
             if (User.IsInRole(RoleNames.PropertyOwner)) {
-                properties = _context.Properties
-                    .Where(p => p.PropertyManager.PropertyManagerId == UserId).Include(p=>p.Reservations);
+                properties =await  _context.Properties
+                    .Where(p => p.PropertyManager.PropertyManagerId == UserId)
+                    .Include(p => p.Reservations)
+                    .ToListAsync();
                                 
             }
             else
-                properties = _context.Properties;
+                properties =await _context.Properties.Include(p => p.Reservations).ToListAsync();
 
             foreach (var property in properties)
             {
+
                 property.Rating = GetRating(property);
 
                 property.CoverImage = await _context.Images.FirstAsync(i => i.Property.Id == property.Id);
             }
 
-            return View(await properties.ToListAsync());
+            return View(properties);
         }
         
         [HttpGet]
@@ -84,6 +87,9 @@ namespace TP_PWEB.Controllers
 
         }
 
+       
+
+
         // GET: Properties/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -99,7 +105,7 @@ namespace TP_PWEB.Controllers
             {
                 return NotFound();
             }
-
+            @property.CurrentClientId = _context.UserId;
             return View(@property);
         }
 

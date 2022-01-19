@@ -65,6 +65,10 @@ namespace TP_PWEB.Models.Properties
         [NotMapped]
         public Image CoverImage { get; set; }
 
+        [NotMapped]
+        public string CurrentClientId { get; set; }
+
+
         public Property(List<Category> categories)
         {
             

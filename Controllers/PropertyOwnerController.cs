@@ -29,7 +29,7 @@ namespace TP_PWEB.Controllers
             _userManager = userManager;
         }
 
-        private String getCurrentUserId()
+        private string GetCurrentUserId()
         {
             var user = this.User;
             return _userManager.GetUserId(User);
@@ -39,7 +39,7 @@ namespace TP_PWEB.Controllers
         // GET: PropertyOwnerController
         public async Task<IActionResult> Index()
         {
-            var ownerId = getCurrentUserId();
+            var ownerId = GetCurrentUserId();
 
             var properties = await _context.Properties
                 .Where(p => p.PropertyManager.PropertyManagerId == ownerId)
@@ -79,7 +79,7 @@ namespace TP_PWEB.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-            model.OwnerId = getCurrentUserId();
+            model.OwnerId = GetCurrentUserId();
             //model.PropertyManager
 
             return View(model);
