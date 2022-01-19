@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +17,13 @@ namespace TP_PWEB.Controllers
     public class ReservationsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public ReservationsController(ApplicationDbContext context)
+        private readonly UserManager<IdentityUser> _userManager;
+        public ReservationsController(ApplicationDbContext context,UserManager<IdentityUser> userManager)
         {
+
             _context = context;
+            _userManager = userManager;
+
         }
 
         private async Task<Reservation> GetReservationAsync(int? reservationId)
@@ -57,7 +61,6 @@ namespace TP_PWEB.Controllers
 
             var client = await _context.Clients
                 .Where(c => c.ClientId == clientId)
-                .Include(c => c.User)
                 .FirstOrDefaultAsync();
 
             if (client == null)
@@ -67,9 +70,10 @@ namespace TP_PWEB.Controllers
             var reservations = _context.Reservations
                 .Where(r => r.ClientId.Equals(clientId))
                 .Include(r => r.Property)
+                .Include(r => r.VerificationReservations)
                 .Include(r => r.Client);
 
-            
+            client.User = await _userManager.FindByIdAsync(clientId);
 
             ViewData["Title"] = "Reservations Made by " + client.User.UserName;
 
@@ -83,11 +87,12 @@ namespace TP_PWEB.Controllers
 
             if (property == null)
                 return null;
-            
-            var reservations =  _context.Reservations
+
+            var reservations = _context.Reservations
                 .Where(r => r.PropertyId == propertyId)
                 .Include(r => r.Property)
-                .Include(r => r.Client);
+                .Include(r => r.VerificationReservations)
+                .Include(r => r.Client);          
 
             ViewData["Title"] = "Reservations in Property " + property.Title;
 
@@ -107,7 +112,16 @@ namespace TP_PWEB.Controllers
 
                 reservations = await IndexPropertyAsync((int)propertyId);
 
-            }else if(propertyId == null)
+                var reservationList = await reservations.ToListAsync();
+
+                foreach (var reservation in reservationList)
+                {
+                    reservation.Client.User = await _context.Users.FindAsync(reservation.ClientId);
+                }
+                return View(reservationList);
+
+            }
+            else if(propertyId == null)
             {
                 //Clientes podem ver reservas uns dos outros
                 reservations = await IndexClientAsync(clientId);
@@ -115,6 +129,14 @@ namespace TP_PWEB.Controllers
             else
             {
                 reservations = await IndexClientProperty((int)propertyId, clientId);
+
+                var reservationList = await reservations.ToListAsync();
+
+                foreach (var reservation in reservationList)
+                {
+                    reservation.Client.User = await _context.Users.FindAsync(reservation.ClientId);
+                }
+                return View(reservationList);
             }
 
             if (reservations == null)
@@ -132,12 +154,7 @@ namespace TP_PWEB.Controllers
                 return NotFound();
             }
 
-            var reservation = await _context.Reservations
-                .Include(r => r.Client)
-                .Include(r => r.Property)
-                .Include(r=> r.ClientEvaluation)
-                .Include(r=> r.StayEvaluation)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var reservation = await GetFullReservationAsync((int)id);
             if (reservation == null)
             {
                 return NotFound();
@@ -201,10 +218,12 @@ namespace TP_PWEB.Controllers
 
         private async Task<bool> IsAvailable(Reservation reservation)
         {
-            return ! await _context.Reservations
+            var available = !await _context.Reservations
                 .Where(r => r.PropertyId == reservation.PropertyId)
                 .Where(r => r.StartDate < reservation.EndDate && r.EndDate > reservation.StartDate)
                 .AnyAsync();
+
+            return available;
  
         }
 
@@ -213,6 +232,8 @@ namespace TP_PWEB.Controllers
             List<Verification> verifications = await _context.Verifications
                 .Where(v => v.PropertyId == reservation.PropertyId)
                 .ToListAsync();
+
+            reservation.VerificationReservations = new List<VerificationReservation>();
 
             foreach(var verification in verifications)
             {
@@ -227,6 +248,26 @@ namespace TP_PWEB.Controllers
 
         }
 
+        public async Task<Reservation> GetFullReservationAsync(int reservationId)
+        {
+            var reservation = await _context.Reservations
+                .Include(r=>r.VerificationReservations)
+                .Include(r=>r.Property)
+                .FirstOrDefaultAsync(r => r.Id == reservationId);
+
+            if (reservation == null)
+                return null;
+
+            var clientId = reservation.ClientId;
+
+            reservation.Client = new Client();
+
+            reservation.Client.User = await _context.Users.FindAsync(clientId);
+
+            return reservation;
+
+        }
+
         // GET: Reservations/Edit/5
         [Authorize(Roles = PropertyOwner + "," + PropertyEmployee)]
         public async Task<IActionResult> Edit(int? id)
@@ -236,13 +277,12 @@ namespace TP_PWEB.Controllers
                 return NotFound();
             }
 
-            var reservation = await _context.Reservations.FindAsync(id);
+            var reservation = await GetFullReservationAsync((int)id);
             if (reservation == null)
             {
                 return NotFound();
             }
-            ViewData["ClientId"] = new SelectList(_context.Clients, "ClientId", "ClientId", reservation.ClientId);
-            ViewData["PropertyId"] = new SelectList(_context.Properties, "Id", "Comodities", reservation.PropertyId);
+
             return View(reservation);
         }
 
@@ -252,15 +292,19 @@ namespace TP_PWEB.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = PropertyOwner + "," + PropertyEmployee)]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,IsDelivered,IsReceived,StartDate,EndDate,PropertyId,ClientId")] Reservation reservation)
+        public async Task<IActionResult> Edit([Bind("Id,IsAccepted,IsDelivered,IsReceived,StartDate,EndDate,PropertyId,ClientId")] Reservation reservation)
         {
-            if (id != reservation.Id)
-            {
+
+
+            if (reservation == null)
                 return NotFound();
-            }
+            
+            if (!await _context.IsEmployeeOrOwnerAsync(reservation.PropertyId))
+                return Unauthorized();
 
             if (ModelState.IsValid)
             {
+
                 try
                 {
                     _context.Update(reservation);
@@ -277,10 +321,9 @@ namespace TP_PWEB.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index),new { propertyId = reservation.PropertyId });
             }
-            ViewData["ClientId"] = new SelectList(_context.Clients, "ClientId", "ClientId", reservation.ClientId);
-            ViewData["PropertyId"] = new SelectList(_context.Properties, "Id", "Comodities", reservation.PropertyId);
+
             return View(reservation);
         }
 

@@ -62,7 +62,7 @@ namespace TP_PWEB.Controllers
 
             return View(verificationReservation);
         }
-
+        /*
         // GET: VerificationReservations/Create
         public IActionResult Create()
         {
@@ -88,7 +88,7 @@ namespace TP_PWEB.Controllers
             ViewData["VerificationId"] = new SelectList(_context.Verifications, "Id", "Name", verificationReservation.VerificationId);
             return View(verificationReservation);
         }
-
+        */
         // GET: VerificationReservations/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -139,11 +139,10 @@ namespace TP_PWEB.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ReservationId"] = new SelectList(_context.Reservations, "Id", "ClientId", verificationReservation.ReservationId);
-            ViewData["VerificationId"] = new SelectList(_context.Verifications, "Id", "Name", verificationReservation.VerificationId);
+           
             return View(verificationReservation);
         }
-
+        /*
         // GET: VerificationReservations/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -174,10 +173,11 @@ namespace TP_PWEB.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        */
         private bool VerificationReservationExists(int id)
         {
             return _context.VerificationReservations.Any(e => e.Id == id);
         }
+        
     }
 }

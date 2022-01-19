@@ -67,14 +67,16 @@
 
             @Html.DisplayFor(model => model.Price)
 
-
+            <br />
             @if (User.IsInRole(RoleNames.Client))
             {
-                <br />
+
                 <a asp-controller="Reservations" asp-action="Create" asp-route-propertyId="@Model.Id" asp-route-clientId="@Model.CurrentClientId">
                     <input type="button" class="btn btn-primary" value="Reserve" />
                 </a>
+                <br />
             }
+
         </div>
     </div>
     <div class="col-4 ">

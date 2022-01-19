@@ -12,27 +12,47 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="VerificationId" />
+            <input type="hidden" asp-for="ReservationId" />
+
+
+
             <div class="form-group">
-                <label asp-for="VerificationId" class="control-label"></label>
-                <select asp-for="VerificationId" class="form-control" asp-items="ViewBag.VerificationId"></select>
-                <span asp-validation-for="VerificationId" class="text-danger"></span>
+                <label asp-for="Verification.Name" class="control-label"></label>
+                <input readonly asp-for="Verification.Name" class="form-control" />
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="ReservationId" class="control-label"></label>
-                <select asp-for="ReservationId" class="form-control" asp-items="ViewBag.ReservationId"></select>
-                <span asp-validation-for="ReservationId" class="text-danger"></span>
+                <label asp-for="@Model.Verification.Moment" class="form-control" />
+                <input readonly asp-for="Verification.Moment" class="form-control" />
             </div>
+
+            <br />
+
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsChecked" /> @Html.DisplayNameFor(model => model.IsChecked)
                 </label>
             </div>
+
             <div class="form-group">
                 <label asp-for="Observation" class="control-label"></label>
                 <textarea rows="5" cols="50" class="form-control" placeholder="make an observation" asp-for="Observation"></textarea>
                 <span asp-validation-for="Observation" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.ImagesForms" class="control-label" />
+                <input type="file" asp-for="@Model.ImagesForms" class="form-control-file" multiple required
+                       accept=".jpg,.png" />
+
+            </div>
+
+            <partial name="~/Views/Shared/ImageSlideShow.cshtml" for="@Model.Images?" />
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

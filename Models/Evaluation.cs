@@ -33,18 +33,18 @@ namespace TP_PWEB.Models
         public int StayTime { get; set; }
 
 
-        [Required]
+       // [Required]
 
         //[Required]
         //[InverseProperty("StayEvaluation")]
         //public virtual Reservation StayReservation{ get; set; }
-        public int StayReservationId { get; set; }
+        //public int StayReservationId { get; set; }
 
 
-        [Required]
+        //[Required]
         //[InverseProperty("ClientEvaluation")]
         //public virtual Reservation ClientReservation { get; set; }
-        public int ClientReservationId { get; set; }
+        //public int ClientReservationId { get; set; }
         /*
         [Required]
         public int PropertyId { get; set; }

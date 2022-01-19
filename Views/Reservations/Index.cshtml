@@ -1,10 +1,8 @@
 ﻿@model IEnumerable<TP_PWEB.Models.Reservation>
 
-@{
-    ViewData["Title"] = "Index";
-}
 
-<h1>Index</h1>
+
+<h1>@ViewData["Title"]</h1>
 
 <table class="table">
     <thead>
@@ -44,7 +42,7 @@
                 @Html.DisplayFor(modelItem => item.Property.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Client.ClientId)
+                @Html.DisplayFor(modelItem => item.Client.User.UserName)
             </td>
             <td>
                 @if (!User.IsInRole(RoleNames.Client))

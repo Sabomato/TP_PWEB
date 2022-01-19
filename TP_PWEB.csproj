@@ -87,6 +87,8 @@
     <Compile Remove="Data\Migrations\20220119114453_PropertyV9.Designer.cs" />
     <Compile Remove="Data\Migrations\20220119170930_PropertyV10.cs" />
     <Compile Remove="Data\Migrations\20220119170930_PropertyV10.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220119175353_ReservationV7.cs" />
+    <Compile Remove="Data\Migrations\20220119175353_ReservationV7.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
