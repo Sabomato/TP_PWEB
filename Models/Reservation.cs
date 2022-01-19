@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using TP_PWEB.Models.Properties;
+using TP_PWEB.Validators;
 
 namespace TP_PWEB.Models
 {
@@ -20,23 +21,30 @@ namespace TP_PWEB.Models
         public bool IsAccepted { get; set; }
 
         [Required]
-        [Display(Name = "Delivered")]
+        [Display(Name = "Delivered To Client")]
         public bool IsDelivered { get; set; }
 
         [Required]
+        [Display(Name = "Received From Client")]
         public bool IsReceived { get; set; }
 
-        [Required]   
+        [Required]
+        [DateAttribute("EndDate","Start date can't be bigger than end date!")]
+        [DataType(DataType.Date)]
         [Display(Name ="From")]
         public DateTime StartDate { get; set; }
         [Required]
+        
+        [DataType(DataType.Date)]
         [Display(Name = "To")]
+        
         public DateTime EndDate { get; set; }
 
         //[ForeignKey("StayEvaluationId")]
         public virtual Evaluation StayEvaluation { get; set; }
 
         //[ForeignKey("ClientEvaluationId")]
+
         public virtual Evaluation ClientEvaluation { get; set; }
 
         public virtual ICollection<VerificationReservation> VerificationReservations{ get; set; }
@@ -56,6 +64,10 @@ namespace TP_PWEB.Models
 
 
         [NotMapped]
+
+        public string ClientName { get; set; }
+
+        [NotMapped]
         public bool IsAvailable { get; set; }
 
         [NotMapped]
@@ -63,7 +75,7 @@ namespace TP_PWEB.Models
         {
             get
             {
-                return IsAvailable ? "The property is not available in that period!" : "Available";
+                return !IsAvailable ? "The property is not available in that period!" : "Available";
             }
         }
 

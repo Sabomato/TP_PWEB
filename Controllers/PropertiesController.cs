@@ -33,17 +33,24 @@ namespace TP_PWEB.Controllers
             
         }
 
-        public double GetRating(Property property)
+        public async Task<double> GetRatingAsync(Property property)
         {
             double rating = 0;
-            //List<Evaluation> evaluations = _context.Evaluations.Where(e=>e.)
+            List<Reservation> reservations = await _context.Reservations
+                .Where(r => r.PropertyId == property.Id)
+                .Include(r => r.StayEvaluation).ToListAsync();
 
-            foreach (var reservation in property.Reservations)
+            int count = 0;
+            foreach (var reservation in reservations)
             {
-                rating += reservation.StayEvaluation.Rating;
+                if(reservation.StayEvaluation!= null)
+                {
+                    rating += reservation.StayEvaluation.Rating;
+                    ++count;
+                }
             }
             //Retorna Nan se property.Reservations.Count == 0 (0/0), mas faz sentido no contexto
-            return rating /  property.Reservations.Count;
+            return rating /  count;
         }
 
 
@@ -62,12 +69,12 @@ namespace TP_PWEB.Controllers
                                 
             }
             else
-                properties =await _context.Properties.Include(p => p.Reservations).ToListAsync();
+                properties =await _context.Properties.ToListAsync();
 
             foreach (var property in properties)
             {
 
-                property.Rating = GetRating(property);
+                property.Rating = await GetRatingAsync(property);
 
                 property.CoverImage = await _context.Images.FirstAsync(i => i.Property.Id == property.Id);
             }
@@ -103,11 +110,13 @@ namespace TP_PWEB.Controllers
             List<Evaluation> evaluations = new List<Evaluation>();
             reservations.ForEach(
                 value => {
-
-                    value.StayEvaluation.StayTime = (value.EndDate - value.StartDate).Days;
-                    value.StayEvaluation.Username = value.Client.User.UserName;
-                    evaluations.Add(value.StayEvaluation);
-                    
+                    if(value.StayEvaluation!= null)
+                    {
+                        value.StayEvaluation.StayTime = (value.EndDate - value.StartDate).Days;
+                        value.StayEvaluation.Username = value.Client.User.UserName;
+                        evaluations.Add(value.StayEvaluation);
+                    }
+                               
                     }
             );
             

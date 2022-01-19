@@ -6,7 +6,7 @@
 <h4>@ViewData["Title"]</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-sm-5">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -21,7 +21,7 @@
                 <input asp-for="EndDate" class="form-control" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
-
+            <br />
 
             <input type="hidden" asp-for="IsReceived" />
             <input type="hidden" asp-for="IsDelivered" />
@@ -30,13 +30,15 @@
             <input type="hidden" asp-for="ClientId" />
 
             @if (!Model.IsAvailable)
-            {   
-                <br />
-                <div class="alert alert-secondary" role="alert">
-                    @Model.Availability;
-                </div>
-            }
+            {
 
+                <span class="alert alert-danger">
+                    @Html.DisplayFor(model => model.Availability)
+                </span>
+                <br />
+
+            }
+            <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -45,7 +47,7 @@
 </div>
 
 <div>
-    <a asp-action="Index" asp-controller="Properties">Back to List</a>
+    <a asp-action="Details" asp-controller="Properties" asp-route-id="@Model.PropertyId">Back to Property</a>
 </div>
 
 @section Scripts {
