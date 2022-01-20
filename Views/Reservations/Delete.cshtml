@@ -39,7 +39,7 @@
             @Html.DisplayNameFor(model => model.Property)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Property.Comodities)
+            @Html.DisplayFor(model => model.Property.Title)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Client)
@@ -51,6 +51,7 @@
 
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ClientId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> 
         <a class="btn btn-info rounded" onclick="history.go(-1); return false;" href="#">Back </a>
     </form>

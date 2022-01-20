@@ -20,66 +20,70 @@
 
             <div class="col-sm-2">
                 <h6 style="font-weight:bold">@Html.DisplayNameFor(model => model.Client)</h6>
-                <a asp-controller="Reservations" asp-action="Index" asp-route-clientId="@Model.ClientId">@Html.DisplayFor(model => model.Client.UserName)
-                </a>
+                <a asp-controller="Reservations" asp-action="Index" asp-route-clientId="@Model.ClientId">
+                    @Html.DisplayFor(model => model.Client.User.UserName)
+            </a>
 
-                <br />
-                <br />
-
-                <h6 style="font-weight:bold">@Html.DisplayNameFor(model => model.Property)</h6>
-                <a asp-controller="Properties" asp-action="Details" asp-route-id="@Model.PropertyId">@Html.DisplayFor(model => model.Property.Title)
-                </a>
-
-                <br />
-
-            </div>
             <br />
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsAccepted" /> @Html.DisplayNameFor(model => model.IsAccepted)
-                </label>
-            </div>
             <br />
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsDelivered" /> @Html.DisplayNameFor(model => model.IsDelivered)
-                </label>
-            </div>
-            <br />
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsReceived" /> @Html.DisplayNameFor(model => model.IsReceived)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input readonly asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input readonly asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
 
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+            <h6 style="font-weight:bold">@Html.DisplayNameFor(model => model.Property)</h6>
+            <a asp-controller="Properties" asp-action="Details" asp-route-id="@Model.PropertyId">
+                @Html.DisplayFor(model => model.Property.Title)
+        </a>
+
+        <br />
+
+        </div>
+        <br />
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="IsAccepted" /> @Html.DisplayNameFor(model => model.IsAccepted)
+            </label>
+        </div>
+        <br />
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="IsDelivered" /> @Html.DisplayNameFor(model => model.IsDelivered)
+            </label>
+        </div>
+        <br />
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="IsReceived" /> @Html.DisplayNameFor(model => model.IsReceived)
+            </label>
+        </div>
+        <div class="form-group">
+            <label asp-for="StartDate" class="control-label"></label>
+            <input readonly asp-for="StartDate" class="form-control" />
+            <span asp-validation-for="StartDate" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="EndDate" class="control-label"></label>
+            <input readonly asp-for="EndDate" class="form-control" />
+            <span asp-validation-for="EndDate" class="text-danger"></span>
+        </div>
+
+        <br />
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
         </form>
     </div>
-    <div class="col-md-4">
-        @if (!@User.IsInRole(RoleNames.Client))
-        {
-            <h2>Verifications</h2>
-            <partial name="~/Views/VerificationReservations/Index.cshtml" for="@Model.VerificationReservations" />
-        }
-    </div>
+    
+
+    
 </div>
 
+<div class="row">
 
+    <partial name="~/Views/Shared/ReservationEvaluations.cshtml" for="@Model" />
 
+</div>
+
+<br />
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-info " onclick="history.go(-1); return false;" href="#">Back </a><br />
 </div>
 
 @section Scripts {

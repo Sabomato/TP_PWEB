@@ -11,7 +11,6 @@ namespace TP_PWEB.Models
 
         public List<Verification> Verifications { get; set; }
 
-        bool AddAnother;
 
         public VerificationCreateViewModel()
         {

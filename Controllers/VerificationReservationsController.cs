@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TP_PWEB.Data;
 using TP_PWEB.Models;
 using TP_PWEB.Models.Properties;
+using TP_PWEB.Services;
 using static TP_PWEB.Models.RoleNames;
 
 namespace TP_PWEB.Controllers
@@ -97,7 +98,11 @@ namespace TP_PWEB.Controllers
                 return NotFound();
             }
 
-            var verificationReservation = await _context.VerificationReservations.FindAsync(id);
+            var verificationReservation = await _context.
+                VerificationReservations
+                .Include(v => v.Images)
+                .Include(v => v.Verification)
+                .FirstOrDefaultAsync(v => v.Id == id);
             if (verificationReservation == null)
             {
                 return NotFound();
@@ -112,7 +117,7 @@ namespace TP_PWEB.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,VerificationId,ReservationId,IsChecked,Observation")] VerificationReservation verificationReservation)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,VerificationId,ReservationId,IsChecked,Observation,ImagesForms")] VerificationReservation verificationReservation)
         {
             if (id != verificationReservation.Id)
             {
@@ -123,6 +128,7 @@ namespace TP_PWEB.Controllers
             {
                 try
                 {
+                    verificationReservation.Images = await FileManager.ConvertImagesAsync(verificationReservation.ImagesForms);
                     _context.Update(verificationReservation);
                     await _context.SaveChangesAsync();
                 }
@@ -137,7 +143,7 @@ namespace TP_PWEB.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Edit", "Reservations", new { id = verificationReservation.ReservationId });
             }
            
             return View(verificationReservation);

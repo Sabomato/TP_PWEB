@@ -10,6 +10,7 @@ using TP_PWEB.Models;
 
 namespace TP_PWEB.Controllers
 {
+
     public class EvaluationsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -145,7 +146,7 @@ namespace TP_PWEB.Controllers
 
 
         // GET: Evaluations/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string username)
         {
             if (id == null)
             {
@@ -154,6 +155,14 @@ namespace TP_PWEB.Controllers
 
             var evaluation = await _context.Evaluations
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            if(username != null)
+            {
+                evaluation.Username = username;
+                evaluation.IsClient = true;
+            }
+            evaluation.IsClient = false; 
+
             if (evaluation == null)
             {
                 return NotFound();
@@ -173,21 +182,27 @@ namespace TP_PWEB.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Rating,Commentary,ReservationId,IsClient")] Evaluation evaluation)
+        public async Task<IActionResult> Create([Bind("Rating,Commentary,ReservationId,IsClient")] Evaluation evaluation)
         {
+
+
             if (ModelState.IsValid)
             {
                 var reservation = await _context.Reservations.FindAsync(evaluation.ReservationId);
+
+                if (reservation == null)
+                    return NotFound();
 
                 if (evaluation.IsClient)
                 {
                     reservation.ClientEvaluation = evaluation;
                 }
+
                 reservation.StayEvaluation = evaluation;
 
                 _context.Reservations.Update(reservation);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(ReservationsController.Details),"Reservations",new { evaluation.ReservationId});
+                return RedirectToAction(nameof(ReservationsController.Details),"Reservations",new { id = evaluation.ReservationId});
             }
             return View(evaluation);
         }

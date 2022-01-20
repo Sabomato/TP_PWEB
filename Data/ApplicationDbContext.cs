@@ -71,6 +71,16 @@ namespace TP_PWEB.Data
 
         }
 
+        public async Task<bool> IsEmployeeAsync(string propertyEmployeeId)
+        {
+
+            return await this.PropertyEmployees
+                .Where(e => e.PropertyManagerId == UserId && e.PropertyEmployeeId == propertyEmployeeId)
+                .AnyAsync();
+
+
+        }
+
         public async Task<bool> IsEmployeeOrOwnerAsync(int propertyId)
         {
 
@@ -119,8 +129,15 @@ namespace TP_PWEB.Data
                 .HasOne(p=>p.Property)
                 .WithMany( i=> i.Images)
                 .IsRequired(false)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Image>()
+                .HasOne(p => p.VerificationReservation)
+                .WithMany(i => i.Images)
+                .IsRequired(false)
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
+
             builder.Entity<Property>()
                 .HasOne(p => p.Category)
                 .WithOne()
@@ -135,7 +152,7 @@ namespace TP_PWEB.Data
                 .HasOne(vr => vr.Verification)
                 .WithMany()
                 .IsRequired(true)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 /*
             builder.Entity<Evaluation>()
                .HasOne(p => p.Property)

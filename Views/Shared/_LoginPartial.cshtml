@@ -14,16 +14,21 @@
         }
         else if (User.IsInRole(RoleNames.PropertyOwner))
         {
-
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="PropertyEmployees" asp-action="Index" title="Manage">My Employees</a>
+            </li>
 
         }
         else if (User.IsInRole(RoleNames.Admin))
         {
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-controller="Clients" asp-action="Index" title="Manage">Clients</a>
+                <a class="nav-link text-dark" asp-controller="Categories" asp-action="Index">Categories</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-controller="PropertyOwner" asp-action="Index"  title="Manage">Property Owners</a>
+                <a class="nav-link text-dark" asp-controller="Clients" asp-action="Index">Clients</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="PropertyManagers" asp-action="Index">Property Managers</a>
             </li>
 
         }

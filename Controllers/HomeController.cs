@@ -16,7 +16,7 @@ namespace TP_PWEB.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _data;
-        private readonly UserManager<IdentityUser> _users;
+        
 
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext App)
         {

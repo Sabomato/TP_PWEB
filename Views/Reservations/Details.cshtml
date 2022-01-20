@@ -51,39 +51,48 @@
     </div>
 
     <div class="col-sm">
+        
         @if (@Model.IsReceived)
         {
-
+            Evaluation ClientEvaluation;
+            Evaluation StayEvaluation;
             @if (@User.IsInRole(RoleNames.Client) && @Model.ClientEvaluation == null)
             {
 
-                var Evaluation = new Evaluation();
-                Evaluation.IsClient = true;
-                Evaluation.ReservationId = Model.Id;
+                ClientEvaluation = new Evaluation();
+                ClientEvaluation.IsClient = true;
+                ClientEvaluation.ReservationId = Model.Id;
 
-                <partial name="~/Views/Evaluations/Create.cshtml" for="@Evaluation" /> 
+
+                <partial name="~/Views/Evaluations/Create.cshtml" for="@ClientEvaluation" />
             }
-            if(Model.ClientEvaluation != null)
+            else if (Model.ClientEvaluation != null)
             {
+                ClientEvaluation = Model.ClientEvaluation;
+                ClientEvaluation.Username = Model.Client.User.UserName;
+                ClientEvaluation.IsClient = true;
 
                 <span style="font-weight:bold">@Html.DisplayNameFor(model => model.ClientEvaluation)</span>
-                <partial name="~/Views/Evaluations/Detalis.cshtml" for="@Model.ClientEvaluation" />
+                <partial name="~/Views/Evaluations/Details.cshtml" for="@ClientEvaluation" />
             }
-            <br/>
-            <br/>
+            <br />
+            <br />
 
-            if (@User.IsInRole(RoleNames.PropertyOwner) && @Model.StayEvaluation == null)
+            if (!@User.IsInRole(RoleNames.Client) && @Model.StayEvaluation == null)
             {
-                var Evaluation = new Evaluation();
-                Evaluation.IsClient = false;
-                Evaluation.ReservationId = Model.Id;
+                StayEvaluation = new Evaluation();
+                StayEvaluation.IsClient = false;
+                StayEvaluation.ReservationId = Model.Id;
 
-                <partial name="~/Views/Evaluations/Create.cshtml" for="@Evaluation" /> 
+
+                <partial name="~/Views/Evaluations/Create.cshtml" for="@StayEvaluation" />
             }
-            if(Model.StayEvaluation != null)
+            else if (Model.StayEvaluation != null)
             {
+                StayEvaluation = Model.StayEvaluation;
+                StayEvaluation.IsClient = false;
                 <span style="font-weight:bold">@Html.DisplayNameFor(model => model.StayEvaluation)</span>
-                <partial name="~/Views/Evaluations/Details.cshtml" for="@Model.StayEvaluation" />
+                <partial name="~/Views/Evaluations/Details.cshtml" for="@StayEvaluation" />
             }
 
 
@@ -93,6 +102,7 @@
 
 
     </div>
+
 </div>
 <div>   
     <a class="btn btn-info " onclick="history.go(-1); return false;" href="#">Back </a><br />  

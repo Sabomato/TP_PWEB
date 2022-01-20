@@ -42,7 +42,7 @@
                 @Html.DisplayFor(modelItem => item.Property.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Client.UserName)
+                @Html.DisplayFor(modelItem => item.Client.User.UserName)
             </td>
             <td>
                 @if (!User.IsInRole(RoleNames.Client))

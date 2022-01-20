@@ -5,11 +5,11 @@
         <div class="carousel-inner">
 
             @{
-                var item = Model.ElementAtOrDefault(0);
+                var item = Model.DefaultIfEmpty(null).ElementAtOrDefault(0);
                 string url;
                 if (item != null)
                 {
-                    url = @Url.Action("GetImage", new { imageId = item.Id });
+                    url = @Url.Action("GetImage","Properties", new { imageId = item.Id });
                     <div class="carousel-item active">
                         <img class="d-block w-100" src="@url" width="200" height="300" alt="@item.Name" />
                     </div>

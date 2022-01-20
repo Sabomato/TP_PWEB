@@ -37,7 +37,7 @@ namespace TP_PWEB.Controllers
                 return NotFound();
 
             var verifications = _context.Verifications
-            .Where(p => p.PropertyId == property.Id && p.isDeleted == false);
+            .Where(p => p.PropertyId == property.Id && p.IsDeleted == false);
 
             ViewData["Title"] = "Verification for " + property.Title;
             ViewData["propertyId"] = property.Id;
@@ -97,7 +97,7 @@ namespace TP_PWEB.Controllers
             Verification verification = new Verification()
             {
                 PropertyId = propertyId,
-                isDeleted = false
+                IsDeleted = false
             };
             //verification.IsChecked = false;
 
@@ -110,15 +110,14 @@ namespace TP_PWEB.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,IsAtExit,PropertyId")] Verification verification, bool addAnother)
+        public async Task<IActionResult> Create([Bind("Id,Name,IsAtExit,PropertyId")] Verification verification)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(verification);
                 await _context.SaveChangesAsync();
                 
-                return addAnother ?
-                    RedirectToAction("Create") : RedirectToAction(nameof(Details),"Properties", new {id = verification.PropertyId});
+                return  RedirectToAction(nameof(Details),"Properties", new {id = verification.PropertyId});
             }
             
             return View(verification);
@@ -201,7 +200,7 @@ namespace TP_PWEB.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var verification = await _context.Verifications.FindAsync(id);
-            verification.isDeleted = true;
+            verification.IsDeleted = true;
             _context.Verifications.Update(verification);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

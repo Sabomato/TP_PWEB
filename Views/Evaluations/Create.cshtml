@@ -1,10 +1,6 @@
 ﻿@model TP_PWEB.Models.Evaluation
 
-@{
-    ViewData["Title"] = "Create";
-}
 
-<h1>Create</h1>
 @{var about = !Model.IsClient ? "Client" : "Stay"; }
 <h4>Make a comment about the @about</h4>
 <hr />
@@ -12,11 +8,11 @@
     <div class="col-sm-5">
         <form asp-action="Create" asp-controller="Evaluations">
 
-            <input type="hidden" asp-for="ReservationId" />
-            <input type="hidden" asp-for="IsClient" />
-
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+            <input type="hidden" asp-for="ReservationId" />
+            <input type="hidden" asp-for="IsClient" />
+            
             <div class="form-group col-5">
                 <label style="font-weight:bold" asp-for="Rating" class="control-label"></label>
                 <input asp-for="Rating" class="form-control" />
@@ -28,17 +24,17 @@
                 <textarea style="resize:none" rows="5" cols="80" class="form-control" placeholder="Make a Comment" asp-for="Commentary" ></textarea>
                 <span asp-validation-for="Commentary" class="text-danger"></span>
             </div>
+
             <br />
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Publish" class="btn btn-primary" />
             </div>
+
         </form>
     </div>
 </div>
 <br/>
-<div>
-    <a class="btn btn-info " onclick="history.go(-1); return false;" href="#">Back </a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

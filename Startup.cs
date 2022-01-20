@@ -38,7 +38,9 @@ namespace TP_PWEB
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<IdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
-                    .AddEntityFrameworkStores<ApplicationDbContext>();
+                    .AddEntityFrameworkStores<ApplicationDbContext>()
+                    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider);
+
 
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();

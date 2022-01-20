@@ -8,20 +8,17 @@ using System.Threading.Tasks;
 
 namespace TP_PWEB.Models
 {
-    public class Client:IdentityUser
+    public class Client
     {
 
         [Required]
         [Key,ForeignKey(nameof(IdentityUser))]
-        public string Id { get; set; }
+        public string ClientId { get; set; }
 
-        //public IdentityUser User;
+        public IdentityUser User;
 
         public virtual ICollection<Reservation> Reservations { get; set; }
 
-        public Client(IdentityUser user)
-        {
-             = user;
-        }
+        
     }
 }

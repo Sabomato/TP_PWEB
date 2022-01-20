@@ -291,17 +291,12 @@ namespace TP_PWEB.Data.Migrations
                     b.Property<int?>("PropertyId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("VerificationId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("VerificationReservationId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PropertyId");
-
-                    b.HasIndex("VerificationId");
 
                     b.HasIndex("VerificationReservationId");
 
@@ -431,15 +426,15 @@ namespace TP_PWEB.Data.Migrations
                     b.Property<bool>("IsAtExit")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PropertyId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -532,15 +527,12 @@ namespace TP_PWEB.Data.Migrations
                     b.HasOne("TP_PWEB.Models.Properties.Property", "Property")
                         .WithMany("Images")
                         .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("TP_PWEB.Models.Verification", "Verification")
-                        .WithMany()
-                        .HasForeignKey("VerificationId");
-
-                    b.HasOne("TP_PWEB.Models.VerificationReservation", null)
+                    b.HasOne("TP_PWEB.Models.VerificationReservation", "VerificationReservation")
                         .WithMany("Images")
-                        .HasForeignKey("VerificationReservationId");
+                        .HasForeignKey("VerificationReservationId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("TP_PWEB.Models.Properties.Property", b =>
@@ -608,7 +600,7 @@ namespace TP_PWEB.Data.Migrations
                     b.HasOne("TP_PWEB.Models.Verification", "Verification")
                         .WithMany()
                         .HasForeignKey("VerificationId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

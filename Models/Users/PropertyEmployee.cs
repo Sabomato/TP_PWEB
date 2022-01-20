@@ -22,5 +22,6 @@ namespace TP_PWEB.Models.Users
         public virtual PropertyManager PropertyManager{ get; set; }
 
 
+   
     }
 }

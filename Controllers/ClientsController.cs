@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -27,13 +28,12 @@ namespace TP_PWEB.Controllers
         public async Task<IActionResult> Index()
         {
             var clients = await _context.Clients.ToListAsync();
-            //ÇÇÇ
-            /*
+            
             foreach(var client in clients)
             {
-                client = await _context.Clients.FindAsync(client.Id);
+                client.User = await _context.Users.FindAsync(client.ClientId);
             }
-            */
+            
 
             return View(clients);
 
@@ -48,7 +48,10 @@ namespace TP_PWEB.Controllers
             }
 
             var client = await _context.Clients
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.ClientId == id);
+
+            client.User = await _context.Users.FindAsync(client.ClientId);
+
             if (client == null)
             {
                 return NotFound();
@@ -88,6 +91,7 @@ namespace TP_PWEB.Controllers
             }
 
             var client = await _context.Clients.FindAsync(id);
+            client.User = await _context.Users.FindAsync(id);
             if (client == null)
             {
                 return NotFound();
@@ -100,15 +104,16 @@ namespace TP_PWEB.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("ClientId")] Client client)
+        public async Task<IActionResult> Edit(string id, [Bind("ClientId")] Client client, [Bind("UserName")]IdentityUser user)
         {
-            if (id != client.Id)
+            if (id != client.ClientId)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
+                client.User = user;
                 try
                 {
                     _context.Update(client);
@@ -116,7 +121,7 @@ namespace TP_PWEB.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClientExists(client.Id))
+                    if (!ClientExists(client.ClientId))
                     {
                         return NotFound();
                     }
@@ -139,7 +144,9 @@ namespace TP_PWEB.Controllers
             }
 
             var client = await _context.Clients
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.ClientId == id);
+
+            client.User = await _context.Users.FindAsync(client.ClientId);
             if (client == null)
             {
                 return NotFound();
@@ -161,7 +168,7 @@ namespace TP_PWEB.Controllers
 
         private bool ClientExists(string id)
         {
-            return _context.Clients.Any(e => e.Id == id);
+            return _context.Clients.Any(e => e.ClientId == id);
         }
     }
 }
