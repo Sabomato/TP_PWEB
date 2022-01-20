@@ -20,7 +20,7 @@
 
             <div class="col-sm-2">
                 <h6 style="font-weight:bold">@Html.DisplayNameFor(model => model.Client)</h6>
-                <a asp-controller="Reservations" asp-action="Index" asp-route-clientId="@Model.ClientId">@Html.DisplayFor(model => model.Client.User.UserName)
+                <a asp-controller="Reservations" asp-action="Index" asp-route-clientId="@Model.ClientId">@Html.DisplayFor(model => model.Client.UserName)
                 </a>
 
                 <br />

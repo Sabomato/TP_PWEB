@@ -35,6 +35,8 @@ namespace TP_PWEB.Models.Properties
         [Required]
         [Display (Name ="Price(€)/Night")]
         [Range(1,double.MaxValue,ErrorMessage ="The price of the property must be bigger than 1€!"),]
+        [DataType(DataType.Currency)]
+
         public double Price { get; set; }
 
         [Required]

@@ -16,16 +16,17 @@ namespace TP_PWEB.Models
         public int Id { get; set; }
 
         [Required]
-        [Range(0, 10)]
+        [Range(0, 10,ErrorMessage ="The rating is between 0 and 10!")]
+         
         public double Rating { get; set; }
 
+        [DataType(DataType.Text)]
         public string Commentary { get; set; }
 
         [NotMapped]
         public bool IsClient { get; set; }
 
         [NotMapped]
-
         public string Username { get; set; }
 
         [NotMapped]
@@ -33,7 +34,11 @@ namespace TP_PWEB.Models
         public int StayTime { get; set; }
 
 
-       // [Required]
+
+        [NotMapped]
+        public int ReservationId { get; set; }
+
+        
 
         //[Required]
         //[InverseProperty("StayEvaluation")]

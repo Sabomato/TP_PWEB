@@ -80,7 +80,7 @@ namespace TP_PWEB.Helpers
                         case RoleNames.Client:
                             context.Clients.Add(new Client()
                             {
-                                ClientId = createdUser.Id,
+                                Id = createdUser.Id,
                                 User = createdUser
                             });
                             break;

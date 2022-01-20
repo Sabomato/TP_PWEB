@@ -51,7 +51,7 @@ namespace TP_PWEB.Controllers
                 .Include(r => r.Client);
 
 
-            ViewData["Title"] = "Reservations Made by " + client.User.UserName + " on " + property.Title;
+            ViewData["Title"] = "Reservations Made by " + client.UserName + " on " + property.Title;
             return reservations;
 
         }
@@ -60,7 +60,7 @@ namespace TP_PWEB.Controllers
         {
 
             var client = await _context.Clients
-                .Where(c => c.ClientId == clientId)
+                .Where(c => c.Id == clientId)
                 .FirstOrDefaultAsync();
 
             if (client == null)
@@ -73,9 +73,9 @@ namespace TP_PWEB.Controllers
                 .Include(r => r.VerificationReservations)
                 .Include(r => r.Client);
 
-            client.User = await _userManager.FindByIdAsync(clientId);
+            client = await _context.Clients.FindAsync(clientId);
 
-            ViewData["Title"] = "Reservations Made by " + client.User.UserName;
+            ViewData["Title"] = "Reservations Made by " + client.UserName;
 
             return reservations;
 
@@ -116,7 +116,7 @@ namespace TP_PWEB.Controllers
 
                 foreach (var reservation in reservationList)
                 {
-                    reservation.Client.User = await _context.Users.FindAsync(reservation.ClientId);
+                    reservation.Client = await _context.Clients.FindAsync(reservation.ClientId);
                 }
                 return View(reservationList);
 
@@ -134,7 +134,7 @@ namespace TP_PWEB.Controllers
 
                 foreach (var reservation in reservationList)
                 {
-                    reservation.Client.User = await _context.Users.FindAsync(reservation.ClientId);
+                    reservation.Client = await _context.Clients.FindAsync(reservation.ClientId);
                 }
                 return View(reservationList);
             }
@@ -253,6 +253,8 @@ namespace TP_PWEB.Controllers
             var reservation = await _context.Reservations
                 .Include(r=>r.VerificationReservations)
                 .Include(r=>r.Property)
+                .Include(r=>r.StayEvaluation)
+                .Include(r=>r.ClientEvaluation)
                 .FirstOrDefaultAsync(r => r.Id == reservationId);
 
             if (reservation == null)
@@ -260,9 +262,8 @@ namespace TP_PWEB.Controllers
 
             var clientId = reservation.ClientId;
 
-            reservation.Client = new Client();
-
-            reservation.Client.User = await _context.Users.FindAsync(clientId);
+            reservation.Client = await _context.Clients.FindAsync(clientId);
+            
 
             return reservation;
 
@@ -335,10 +336,7 @@ namespace TP_PWEB.Controllers
                 return NotFound();
             }
 
-            var reservation = await _context.Reservations
-                .Include(r => r.Client)
-                .Include(r => r.Property)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var reservation = await GetFullReservationAsync((int)id);
             if (reservation == null)
             {
                 return NotFound();

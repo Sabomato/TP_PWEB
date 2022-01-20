@@ -6,49 +6,94 @@
 
 <h1>Details</h1>
 
-<div>
+<div class="row">
     <h4>Reservation</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsDelivered)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsDelivered)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsReceived)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsReceived)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Property)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Property.Comodities)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Client)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Client.User.UserName)
-        </dd>
-    </dl>
+    <div class="col-sm">
+        <dl>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.IsDelivered)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.IsDelivered)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.IsReceived)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.IsReceived)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.StartDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.StartDate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.EndDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.EndDate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Property)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Property.Title)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Client)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Client.User.UserName)
+            </dd>
+        </dl>
+    </div>
+
+    <div class="col-sm">
+        @if (@Model.IsReceived)
+        {
+
+            @if (@User.IsInRole(RoleNames.Client) && @Model.ClientEvaluation == null)
+            {
+
+                var Evaluation = new Evaluation();
+                Evaluation.IsClient = true;
+                Evaluation.ReservationId = Model.Id;
+
+                <partial name="~/Views/Evaluations/Create.cshtml" for="@Evaluation" /> 
+            }
+            if(Model.ClientEvaluation != null)
+            {
+
+                <span style="font-weight:bold">@Html.DisplayNameFor(model => model.ClientEvaluation)</span>
+                <partial name="~/Views/Evaluations/Detalis.cshtml" for="@Model.ClientEvaluation" />
+            }
+            <br/>
+            <br/>
+
+            if (@User.IsInRole(RoleNames.PropertyOwner) && @Model.StayEvaluation == null)
+            {
+                var Evaluation = new Evaluation();
+                Evaluation.IsClient = false;
+                Evaluation.ReservationId = Model.Id;
+
+                <partial name="~/Views/Evaluations/Create.cshtml" for="@Evaluation" /> 
+            }
+            if(Model.StayEvaluation != null)
+            {
+                <span style="font-weight:bold">@Html.DisplayNameFor(model => model.StayEvaluation)</span>
+                <partial name="~/Views/Evaluations/Details.cshtml" for="@Model.StayEvaluation" />
+            }
+
+
+
+
+        }
+
+
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div>   
+    <a class="btn btn-info " onclick="history.go(-1); return false;" href="#">Back </a><br />  
 </div>

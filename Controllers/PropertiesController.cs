@@ -108,17 +108,18 @@ namespace TP_PWEB.Controllers
                 .ToListAsync();
             
             List<Evaluation> evaluations = new List<Evaluation>();
-            reservations.ForEach(
-                value => {
-                    if(value.StayEvaluation!= null)
-                    {
-                        value.StayEvaluation.StayTime = (value.EndDate - value.StartDate).Days;
-                        value.StayEvaluation.Username = value.Client.User.UserName;
-                        evaluations.Add(value.StayEvaluation);
-                    }
-                               
-                    }
-            );
+
+            foreach(var reservation in reservations)
+            {
+                if (reservation.StayEvaluation != null)
+                {
+                    reservation.StayEvaluation.StayTime = (reservation.EndDate - reservation.StartDate).Days;
+                    reservation.Client = await _context.Clients.FindAsync(reservation.ClientId);
+                    reservation.StayEvaluation.Username = reservation.Client.UserName;
+                    evaluations.Add(reservation.StayEvaluation);
+                }
+
+            }
             
             return evaluations;
                         

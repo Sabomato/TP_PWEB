@@ -173,13 +173,21 @@ namespace TP_PWEB.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Rating,Commentary")] Evaluation evaluation)
+        public async Task<IActionResult> Create([Bind("Id,Rating,Commentary,ReservationId,IsClient")] Evaluation evaluation)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(evaluation);
+                var reservation = await _context.Reservations.FindAsync(evaluation.ReservationId);
+
+                if (evaluation.IsClient)
+                {
+                    reservation.ClientEvaluation = evaluation;
+                }
+                reservation.StayEvaluation = evaluation;
+
+                _context.Reservations.Update(reservation);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ReservationsController.Details),"Reservations",new { evaluation.ReservationId});
             }
             return View(evaluation);
         }

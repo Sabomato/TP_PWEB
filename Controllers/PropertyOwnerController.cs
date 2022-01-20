@@ -14,7 +14,7 @@ using TP_PWEB.Models;
 using static TP_PWEB.Models.RoleNames;
 namespace TP_PWEB.Controllers
 {
-    [Authorize(Roles = PropertyOwner + "," + PropertyEmployee)]
+    [Authorize(Roles = RoleNames.Admin)]
 
     public class PropertyOwnerController : Controller
     {
