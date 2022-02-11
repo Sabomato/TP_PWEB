@@ -63,34 +63,7 @@ namespace TP_PWEB.Controllers
 
             return View(verificationReservation);
         }
-        /*
-        // GET: VerificationReservations/Create
-        public IActionResult Create()
-        {
-            ViewData["ReservationId"] = new SelectList(_context.Reservations, "Id", "ClientId");
-            ViewData["VerificationId"] = new SelectList(_context.Verifications, "Id", "Name");
-            return View();
-        }
-
-        // POST: VerificationReservations/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,VerificationId,ReservationId,IsChecked,Observation")] VerificationReservation verificationReservation)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(verificationReservation);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ReservationId"] = new SelectList(_context.Reservations, "Id", "ClientId", verificationReservation.ReservationId);
-            ViewData["VerificationId"] = new SelectList(_context.Verifications, "Id", "Name", verificationReservation.VerificationId);
-            return View(verificationReservation);
-        }
-        */
-        // GET: VerificationReservations/Edit/5
+       
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -148,38 +121,7 @@ namespace TP_PWEB.Controllers
            
             return View(verificationReservation);
         }
-        /*
-        // GET: VerificationReservations/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var verificationReservation = await _context.VerificationReservations
-                .Include(v => v.Reservation)
-                .Include(v => v.Verification)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (verificationReservation == null)
-            {
-                return NotFound();
-            }
-
-            return View(verificationReservation);
-        }
-
-        // POST: VerificationReservations/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var verificationReservation = await _context.VerificationReservations.FindAsync(id);
-            _context.VerificationReservations.Remove(verificationReservation);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-        */
+     
         private bool VerificationReservationExists(int id)
         {
             return _context.VerificationReservations.Any(e => e.Id == id);

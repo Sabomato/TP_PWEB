@@ -43,9 +43,9 @@ namespace TP_PWEB.Controllers
             int count = 0;
             foreach (var reservation in reservations)
             {
-                if(reservation.StayEvaluation!= null)
+                if(reservation.ClientEvaluation != null)
                 {
-                    rating += reservation.StayEvaluation.Rating;
+                    rating += reservation.ClientEvaluation.Rating;
                     ++count;
                 }
             }
@@ -114,12 +114,13 @@ namespace TP_PWEB.Controllers
 
             foreach(var reservation in reservations)
             {
-                if (reservation.StayEvaluation != null)
+                if (reservation.ClientEvaluation != null)
                 {
-                    reservation.StayEvaluation.StayTime = (reservation.EndDate - reservation.StartDate).Days;
+                    reservation.ClientEvaluation.StayTime = (reservation.EndDate - reservation.StartDate).Days;
                     reservation.Client.User = await _context.Users.FindAsync(reservation.ClientId);
-                    reservation.StayEvaluation.Username = reservation.Client.User.UserName;
-                    evaluations.Add(reservation.StayEvaluation);
+                    reservation.ClientEvaluation.Username = reservation.Client.User.UserName;
+                    reservation.ClientEvaluation.IsClient = true;
+                    evaluations.Add(reservation.ClientEvaluation);
                 }
 
             }

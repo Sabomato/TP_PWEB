@@ -364,7 +364,7 @@ namespace TP_PWEB.Controllers
             var reservation = await GetFullReservationAsync(id);
             _context.Reservations.Remove(reservation);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index),new { clientId = clientId });
+            return RedirectToAction(nameof(Index),new { clientId });
         }
 
         private bool ReservationExists(int id)

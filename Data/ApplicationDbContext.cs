@@ -115,16 +115,6 @@ namespace TP_PWEB.Data
         {
             base.OnModelCreating(builder);
 
-            //builder.Seed();
-
-            /*
-            builder.Entity<Image>()
-                .HasOne(i => i.Verification)
-                .WithMany()
-                .IsRequired(false)
-                .HasForeignKey(v => v.VerificationId);
-                //.OnDelete(DeleteBehavior.);
-            */
             builder.Entity<Image>()
                 .HasOne(p=>p.Property)
                 .WithMany( i=> i.Images)
@@ -153,42 +143,7 @@ namespace TP_PWEB.Data
                 .WithMany()
                 .IsRequired(true)
                 .OnDelete(DeleteBehavior.NoAction);
-/*
-            builder.Entity<Evaluation>()
-               .HasOne(p => p.Property)
-               .WithMany()
-               .IsRequired(true);
 
-*/
-           /*
-                        builder.Entity<Reservation>().HasOne(e => e.StayEvaluation)
-                            .WithOne()
-                            .HasForeignKey<Evaluation>()
-                            .IsRequired(required: false);
-                        //.OnDelete(DeleteBehavior.NoAction);
-
-                        builder.Entity<Reservation>().HasOne(e => e.ClientEvaluation)
-                            .WithOne()
-                            .HasForeignKey<Evaluation>()
-                            .IsRequired(required: false);
-                            //.OnDelete(DeleteBehavior.NoAction);
-            /*
-                        builder.Entity<Verification>()
-                            .HasOne(v => v.EntranceProperty)
-                            .WithMany(v => v.EntranceVerifications)
-                            .HasForeignKey( f => f.EntrancePropertyId)
-                            .OnDelete(DeleteBehavior.NoAction);
-
-                        builder.Entity<Verification>()
-                         .HasOne(v => v.ExitProperty)
-                         .WithMany(v => v.ExitVerifications)
-                         .HasForeignKey(f => f.ExitPropertyId)
-                         .OnDelete(DeleteBehavior.NoAction);
-            */
-            //builder.Owned<Verification>();
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
 
 
         }
@@ -211,6 +166,7 @@ namespace TP_PWEB.Data
         public DbSet<Evaluation> Evaluations { get; set; }
 
         public DbSet<Category> Categories { get; set; }
+
         public DbSet<Image> Images { get; set; }
 
     }

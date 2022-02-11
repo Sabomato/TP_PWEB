@@ -12,7 +12,7 @@
 
             <input type="hidden" asp-for="ReservationId" />
             <input type="hidden" asp-for="IsClient" />
-            
+
             <div class="form-group col-5">
                 <label style="font-weight:bold" asp-for="Rating" class="control-label"></label>
                 <input asp-for="Rating" class="form-control" />
@@ -21,7 +21,7 @@
             <br />
             <div class="form-group">
                 <label style="font-weight:bold" asp-for="Commentary" class="control-label"></label>
-                <textarea style="resize:none" rows="5" cols="80" class="form-control" placeholder="Make a Comment" asp-for="Commentary" ></textarea>
+                <textarea style="resize:none" rows="5" cols="80" class="form-control" placeholder="Make a Comment" asp-for="Commentary"></textarea>
                 <span asp-validation-for="Commentary" class="text-danger"></span>
             </div>
 
@@ -34,8 +34,10 @@
         </form>
     </div>
 </div>
-<br/>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+<br />
+
+
+

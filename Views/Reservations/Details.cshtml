@@ -50,60 +50,20 @@
         </dl>
     </div>
 
-    <div class="col-sm">
-        
-        @if (@Model.IsReceived)
-        {
-            Evaluation ClientEvaluation;
-            Evaluation StayEvaluation;
-            @if (@User.IsInRole(RoleNames.Client) && @Model.ClientEvaluation == null)
-            {
-
-                ClientEvaluation = new Evaluation();
-                ClientEvaluation.IsClient = true;
-                ClientEvaluation.ReservationId = Model.Id;
-
-
-                <partial name="~/Views/Evaluations/Create.cshtml" for="@ClientEvaluation" />
-            }
-            else if (Model.ClientEvaluation != null)
-            {
-                ClientEvaluation = Model.ClientEvaluation;
-                ClientEvaluation.Username = Model.Client.User.UserName;
-                ClientEvaluation.IsClient = true;
-
-                <span style="font-weight:bold">@Html.DisplayNameFor(model => model.ClientEvaluation)</span>
-                <partial name="~/Views/Evaluations/Details.cshtml" for="@ClientEvaluation" />
-            }
-            <br />
-            <br />
-
-            if (!@User.IsInRole(RoleNames.Client) && @Model.StayEvaluation == null)
-            {
-                StayEvaluation = new Evaluation();
-                StayEvaluation.IsClient = false;
-                StayEvaluation.ReservationId = Model.Id;
-
-
-                <partial name="~/Views/Evaluations/Create.cshtml" for="@StayEvaluation" />
-            }
-            else if (Model.StayEvaluation != null)
-            {
-                StayEvaluation = Model.StayEvaluation;
-                StayEvaluation.IsClient = false;
-                <span style="font-weight:bold">@Html.DisplayNameFor(model => model.StayEvaluation)</span>
-                <partial name="~/Views/Evaluations/Details.cshtml" for="@StayEvaluation" />
-            }
-
-
-
-
-        }
-
-
-    </div>
 
 </div>
-<div>   
-    <a class="btn btn-info " onclick="history.go(-1); return false;" href="#">Back </a><br />  
+
+
+<div>
+    <a class="btn btn-primary " onclick="history.go(-1); return false;" href="#">Back </a><br />
 </div>
+<br/>
+<div class="row">
+
+    <partial name="~/Views/Shared/ReservationEvaluations.cshtml" model="@Model" />
+
+</div>
+<br />
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

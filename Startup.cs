@@ -195,7 +195,7 @@ namespace TP_PWEB
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Properties}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
                 /*endpoints.MapAreaControllerRoute(
                         name: "default",

@@ -40,11 +40,9 @@ namespace TP_PWEB.Models
         
         public DateTime EndDate { get; set; }
 
-        //[ForeignKey("StayEvaluationId")]
         [Display(Name = "Owner")]
         public virtual Evaluation StayEvaluation { get; set; }
 
-        //[ForeignKey("ClientEvaluationId")]
         [Display(Name ="Client")]
         public virtual Evaluation ClientEvaluation { get; set; }
 

@@ -35,7 +35,7 @@ namespace TP_PWEB.Models
         public string Username { get; set; }
 
         [NotMapped]
-        [Display(Name ="Stay time")]
+        [Display(Name ="Stay time (days)")]
         public int StayTime { get; set; }
 
         [NotMapped]
