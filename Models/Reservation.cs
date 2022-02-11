@@ -21,11 +21,11 @@ namespace TP_PWEB.Models
         public bool IsAccepted { get; set; }
 
         [Required]
-        [Display(Name = "Delivered To Client")]
+        [Display(Name = "Delivered ")]
         public bool IsDelivered { get; set; }
 
         [Required]
-        [Display(Name = "Received From Client")]
+        [Display(Name = "Received ")]
         public bool IsReceived { get; set; }
 
         [Required]
@@ -40,11 +40,10 @@ namespace TP_PWEB.Models
         
         public DateTime EndDate { get; set; }
 
-        //[ForeignKey("StayEvaluationId")]
+        [Display(Name = "Owner")]
         public virtual Evaluation StayEvaluation { get; set; }
 
-        //[ForeignKey("ClientEvaluationId")]
-
+        [Display(Name ="Client")]
         public virtual Evaluation ClientEvaluation { get; set; }
 
         public virtual ICollection<VerificationReservation> VerificationReservations{ get; set; }

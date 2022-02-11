@@ -6,21 +6,41 @@
 
 
 <div>
-    <h4>Evaluation</h4>
     <hr />
-    <dl class="row">
+    <dl class="row-cols-sm-5 " >
+
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Rating)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Rating)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Username)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Username)
-        </dd>
+
+        @if (@Model.IsClient)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.StayTime)
+            </dt>
+            <dt class="col-sm-2">
+                @Html.DisplayFor(model => model.StayTime)
+            </dt>
+
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Username)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Username)
+            </dd>
+
+        }
+        else
+        {
+            <dt class="col-sm-2">
+                <bold style="font-weight:bold">Owner</bold>
+            </dt>
+        }
+        
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Commentary)
         </dt>

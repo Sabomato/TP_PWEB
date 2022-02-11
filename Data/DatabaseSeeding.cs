@@ -17,8 +17,8 @@ namespace TP_PWEB.Helpers
 
         public static async Task Seed( IServiceProvider serviceProvider)
         {
-            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            
+            
             var context = serviceProvider.GetService<ApplicationDbContext>();
 
             await CreateRoles( serviceProvider);
@@ -30,7 +30,7 @@ namespace TP_PWEB.Helpers
 
         private static async Task CreateTestUsers(IServiceProvider serviceProvider)
         {
-            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            
             var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
             var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
             IdentityUser createdUser;
@@ -122,7 +122,7 @@ namespace TP_PWEB.Helpers
 
 
         }
-        private static async Task<IdentityUser> CreateUserWithRole(IdentityUser user, UserManager<IdentityUser> userManager, string roleName)
+        public static async Task<IdentityUser> CreateUserWithRole(IdentityUser user, UserManager<IdentityUser> userManager, string roleName)
         {
             var userResult = await userManager.FindByEmailAsync(user.Email);
 
@@ -141,11 +141,30 @@ namespace TP_PWEB.Helpers
             return null;
         }
 
+        public static async Task<IdentityUser> CreateUserWithRole(IdentityUser user, UserManager<IdentityUser> userManager, string roleName,string password)
+        {
+            var userResult = await userManager.FindByEmailAsync(user.Email);
+
+            if (userResult == null)
+            {
+                var createUser = await userManager.CreateAsync(user, password);
+                if (createUser.Succeeded)
+                {
+                    //here we tie the new user to the role
+                    await userManager.AddToRoleAsync(user, roleName);
+
+                    return await userManager.FindByEmailAsync(user.Email);
+
+                }
+            }
+            return null;
+        }
+
         private static async Task CreateRoles( IServiceProvider serviceProvider)
         {
             var roleNames = RoleNames.Roles;
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            
             IdentityResult roleResult;
 
 

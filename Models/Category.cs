@@ -16,6 +16,9 @@ namespace TP_PWEB.Models
         
         public string Name { get; set; }
 
+        [NotMapped]
         
+        public bool CanBeRemoved { get; set; }
+
     }
 }

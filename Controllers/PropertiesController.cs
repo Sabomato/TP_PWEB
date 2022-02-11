@@ -38,14 +38,14 @@ namespace TP_PWEB.Controllers
             double rating = 0;
             List<Reservation> reservations = await _context.Reservations
                 .Where(r => r.PropertyId == property.Id)
-                .Include(r => r.StayEvaluation).ToListAsync();
+                .Include(r => r.ClientEvaluation).ToListAsync();
 
             int count = 0;
             foreach (var reservation in reservations)
             {
-                if(reservation.StayEvaluation!= null)
+                if(reservation.ClientEvaluation != null)
                 {
-                    rating += reservation.StayEvaluation.Rating;
+                    rating += reservation.ClientEvaluation.Rating;
                     ++count;
                 }
             }
@@ -54,7 +54,7 @@ namespace TP_PWEB.Controllers
         }
 
 
-        //[Authorize(Roles = RoleNames.PropertyOwner)]
+        
         // GET: Properties
         public async Task<IActionResult> Index()
         {
@@ -66,10 +66,13 @@ namespace TP_PWEB.Controllers
                     .Include(p => p.Reservations)
                     .Include(p=>p.Category)
                     .ToListAsync();
-                                
+                ViewData["Title"] = "Your ";
             }
             else
+            {
                 properties =await _context.Properties.ToListAsync();
+                ViewData["Title"] = "All ";
+            }
 
             foreach (var property in properties)
             {
@@ -78,7 +81,7 @@ namespace TP_PWEB.Controllers
 
                 property.CoverImage = await _context.Images.FirstAsync(i => i.Property.Id == property.Id);
             }
-
+            ViewData["Title"] += "Properties";
             return View(properties);
         }
         
@@ -103,22 +106,24 @@ namespace TP_PWEB.Controllers
             var reservations = await _context
                 .Reservations
                 .Where(r => r.PropertyId == propertyId)
-                .Include(r => r.StayEvaluation)
+                .Include(r => r.ClientEvaluation)
                 .Include(r=>r.Client)
                 .ToListAsync();
             
             List<Evaluation> evaluations = new List<Evaluation>();
-            reservations.ForEach(
-                value => {
-                    if(value.StayEvaluation!= null)
-                    {
-                        value.StayEvaluation.StayTime = (value.EndDate - value.StartDate).Days;
-                        value.StayEvaluation.Username = value.Client.User.UserName;
-                        evaluations.Add(value.StayEvaluation);
-                    }
-                               
-                    }
-            );
+
+            foreach(var reservation in reservations)
+            {
+                if (reservation.ClientEvaluation != null)
+                {
+                    reservation.ClientEvaluation.StayTime = (reservation.EndDate - reservation.StartDate).Days;
+                    reservation.Client.User = await _context.Users.FindAsync(reservation.ClientId);
+                    reservation.ClientEvaluation.Username = reservation.Client.User.UserName;
+                    reservation.ClientEvaluation.IsClient = true;
+                    evaluations.Add(reservation.ClientEvaluation);
+                }
+
+            }
             
             return evaluations;
                         
@@ -143,7 +148,8 @@ namespace TP_PWEB.Controllers
                 return NotFound();
             }
             @property.CurrentClientId = _context.UserId;
-            property.StayEvaluations = await  GetCommentaryAsync((int)id);
+            property.ClientEvaluations = await  GetCommentaryAsync((int)id);
+            property.Rating = await  GetRatingAsync(property);
             return View(@property);
         }
 
@@ -204,7 +210,7 @@ namespace TP_PWEB.Controllers
             if (property == null)
                 return null;
 
-            property.setCategory(await _context.Categories.ToListAsync());
+            property.SetCategory(await _context.Categories.ToListAsync());
 
             return property;
 
@@ -288,7 +294,8 @@ namespace TP_PWEB.Controllers
             }
 
             var @property = await GetFullProperty((int)id);
-            @property.StayEvaluations = await GetCommentaryAsync((int)id);
+            @property.ClientEvaluations = await GetCommentaryAsync((int)id);
+            @property.Rating = await GetRatingAsync(@property);
 
             if (@property == null)
             {
@@ -305,8 +312,13 @@ namespace TP_PWEB.Controllers
         {
             var @property = await _context.Properties.FindAsync(id);
 
-            
+            var images = await _context.Images.Where(i => i.PropertyId == id).ToListAsync();
+
+            _context.RemoveRange(images);
+
             _context.Properties.Remove(@property);
+
+            
             //_context.Images.7
 
             await _context.SaveChangesAsync();

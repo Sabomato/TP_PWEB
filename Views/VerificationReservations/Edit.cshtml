@@ -6,11 +6,11 @@
 
 <h1>Edit</h1>
 
-<h4>VerificationReservation</h4>
+<h4>Verification</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data" >
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 
@@ -24,9 +24,10 @@
                 <label asp-for="Verification.Name" class="control-label"></label>
                 <input readonly asp-for="Verification.Name" class="form-control" />
             </div>
+
             <br />
             <div class="form-group">
-                <label asp-for="@Model.Verification.Moment" class="form-control" />
+                <label asp-for="Verification.Moment" class="control-label"></label>
                 <input readonly asp-for="Verification.Moment" class="form-control" />
             </div>
 
@@ -38,20 +39,28 @@
                 </label>
             </div>
 
+            <br/>
             <div class="form-group">
                 <label asp-for="Observation" class="control-label"></label>
-                <textarea rows="5" cols="50" class="form-control" placeholder="make an observation" asp-for="Observation"></textarea>
+                <textarea style="resize:none" rows="5" cols="50" class="form-control" placeholder="make an observation" asp-for="Observation"></textarea>
                 <span asp-validation-for="Observation" class="text-danger"></span>
             </div>
+            <br />
 
             <div class="form-group">
                 <label asp-for="@Model.ImagesForms" class="control-label" />
-                <input type="file" asp-for="@Model.ImagesForms" class="form-control-file" multiple required
+                <input type="file" asp-for="@Model.ImagesForms" class="form-control-file" multiple 
                        accept=".jpg,.png" />
 
             </div>
 
-            <partial name="~/Views/Shared/ImageSlideShow.cshtml" for="@Model.Images?" />
+            <br />
+            @if (@Model.Images.Count > 0)
+            {
+                <partial name="~/Views/Shared/ImageSlideShow.cshtml" for="@Model.Images" />
+            }
+
+            <br />
 
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

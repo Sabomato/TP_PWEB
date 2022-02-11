@@ -7,27 +7,32 @@
 
 
 <div class="justify-content-around">
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    
 
     @if (User.IsInRole(RoleNames.PropertyEmployee) || User.IsInRole(RoleNames.PropertyOwner))
     {
-        <a class="btn-" asp-action="Index" asp-controller="Verifications" asp-route-propertyId="@Model.Id">Verifications</a>
-        <a class="btn-" asp-action="Index" asp-controller="Reservations" asp-route-propertyId="@Model.Id">Reservations</a>
+        <a class="btn btn-primary" asp-action="Index" asp-controller="Verifications" asp-route-propertyId="@Model.Id">Verifications</a>
+        <a class="btn btn-primary" asp-action="Index" asp-controller="Reservations" asp-route-propertyId="@Model.Id">Reservations</a>
 
     }
 
-    <a class="btn-" asp-action="Index" asp-controller="Evaluation" asp-route-propertyId="@Model.Id">Comments</a> |
-    <a asp-action="Index">Back to List</a>
+    @*@<a class="btn-" asp-action="Index" asp-controller="Evaluation" asp-route-propertyId="@Model.Id">Comments</a> |*@
+    <a class="btn btn-primary" asp-action="Index">Back</a>
 </div>
 <hr />
 <div class="row">
     <div class="col-sm">
-        @*<h4>Property</h4>*@
+        
 
-
-        <h2>
-            @Html.DisplayFor(model => model.Title)
-        </h2>
+        <div class="row justify-content">
+            <h2>
+                @Html.DisplayFor(model => model.Title)
+            </h2>
+            <h3>
+                @Html.DisplayFor(model => model.Rating)/10
+            </h3>            
+        </div>
+        
         <br />
         <div class="col-sm-2">
             @Html.DisplayFor(model => model.PropertyManager.User.UserName)
@@ -61,34 +66,32 @@
             @Html.DisplayFor(model => model.Comodities)
         </p>
 
-        <div class="border border-dark">
-            @Html.DisplayNameFor(model => model.Price):
+        
+        @Html.DisplayNameFor(model => model.Price):
 
-
-            @Html.DisplayFor(model => model.Price)
-
+        @Html.DisplayFor(model => model.Price)
+            
+        <br/>
+        <br />
+        @if (User.IsInRole(RoleNames.Client))
+        {
+    
+            <a  class="btn btn-primary"  asp-controller="Reservations" asp-action="Create" asp-route-propertyId="@Model.Id" asp-route-clientId="@Model.CurrentClientId">
+                 Reserve 
+            </a>
             <br />
-            @if (User.IsInRole(RoleNames.Client))
-            {
+        }
 
-                <a asp-controller="Reservations" asp-action="Create" asp-route-propertyId="@Model.Id" asp-route-clientId="@Model.CurrentClientId">
-                    <input type="button" class="btn btn-primary" value="Reserve" />
-                </a>
-                <br />
-            }
-
-        </div>
-    </div>
-    <div class="col-4 ">
        
     </div>
+  
 </div>
     <br />
     <br />
     <hr />
     <h2>Commentary</h2>
-    <hr />
 
-    <partial name="~/Views/Evaluations/Index.cshtml" for="@Model.StayEvaluations" />
+
+    <partial name="~/Views/Evaluations/Index.cshtml" for="@Model.ClientEvaluations" />
 
 

@@ -4,20 +4,12 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Rating)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Commentary)
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-
-            <partial name="~/Views/Evaluations/Detailss.cshtml" for="@item" />
+            <partial name="~/Views/Evaluations/Details.cshtml" for="@item" />
         }
     </tbody>
 </table>

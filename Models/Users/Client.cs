@@ -19,7 +19,6 @@ namespace TP_PWEB.Models
 
         public virtual ICollection<Reservation> Reservations { get; set; }
 
-
-
+        
     }
 }

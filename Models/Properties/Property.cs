@@ -30,15 +30,17 @@ namespace TP_PWEB.Models.Properties
         public virtual Category Category { get; set; }
 
         [Required]
+        [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
         [Required]
         [Display (Name ="Price(€)/Night")]
         [Range(1,double.MaxValue,ErrorMessage ="The price of the property must be bigger than 1€!"),]
+       //[DataType(DataType.Currency)]
         public double Price { get; set; }
 
         [Required]
-        
+        [DataType(DataType.MultilineText)]
         public string Comodities { get; set; }
 
         [Required]
@@ -48,7 +50,7 @@ namespace TP_PWEB.Models.Properties
         
         public virtual ICollection<Reservation> Reservations { get; set; }
         
-        //[ForeignKey("ExitVerification")]
+        
         public virtual ICollection<Verification> Verifications { get; set; }
 
         public virtual ICollection<Image> Images { get; set; }
@@ -78,7 +80,7 @@ namespace TP_PWEB.Models.Properties
 
 
         [NotMapped]
-        public ICollection<Evaluation> StayEvaluations { get; set; }
+        public ICollection<Evaluation> ClientEvaluations { get; set; }
 
         [NotMapped]
         public string OwnerName { get; set; }
@@ -86,11 +88,11 @@ namespace TP_PWEB.Models.Properties
         public Property(List<Category> categories)
         {
 
-            setCategory(categories);
+            SetCategory(categories);
             
         }
 
-        public void setCategory(List<Category> categories)
+        public void SetCategory(List<Category> categories)
         {
             Categories = new SelectList(categories, nameof(Category.Id), nameof(Category.Name));
         }
@@ -99,8 +101,6 @@ namespace TP_PWEB.Models.Properties
 
         public Property() { }
 
-        //[ForeignKey("EntranceVerification")]
-        //public virtual ICollection<Verification> EntranceVerifications { get; set; }
 
     }
 }

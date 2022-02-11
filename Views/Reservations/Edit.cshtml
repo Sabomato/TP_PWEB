@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" asp-controller="Reservations">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <input type="hidden" asp-for="Id" />
@@ -20,19 +20,22 @@
 
             <div class="col-sm-2">
                 <h6 style="font-weight:bold">@Html.DisplayNameFor(model => model.Client)</h6>
-                <a asp-controller="Reservations" asp-action="Index" asp-route-clientId="@Model.ClientId">@Html.DisplayFor(model => model.Client.User.UserName)
+                <a asp-controller="Reservations" asp-action="Index" asp-route-clientId="@Model.ClientId">
+                    @Html.DisplayFor(model => model.Client.User.UserName)
                 </a>
 
                 <br />
                 <br />
 
                 <h6 style="font-weight:bold">@Html.DisplayNameFor(model => model.Property)</h6>
-                <a asp-controller="Properties" asp-action="Details" asp-route-id="@Model.PropertyId">@Html.DisplayFor(model => model.Property.Title)
+                <a  asp-controller="Properties" asp-action="Details" asp-route-id="@Model.PropertyId">
+                    @Html.DisplayFor(model => model.Property.Title)
                 </a>
 
                 <br />
 
             </div>
+
             <br />
             <div class="form-group form-check">
                 <label class="form-check-label">
@@ -62,24 +65,27 @@
                 <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
 
+            <br />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
+
         </form>
     </div>
-    <div class="col-md-4">
-        @if (!@User.IsInRole(RoleNames.Client))
-        {
-            <h2>Verifications</h2>
-            <partial name="~/Views/VerificationReservations/Index.cshtml" for="@Model.VerificationReservations" />
-        }
-    </div>
+    
+
+    
 </div>
 
+<div class="row">
 
+    <partial name="~/Views/Shared/ReservationEvaluations.cshtml" model="@Model" />
 
+</div>
+
+<br />
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-primary" onclick="history.go(-1); return false;" href="#">Back </a><br />
 </div>
 
 @section Scripts {
