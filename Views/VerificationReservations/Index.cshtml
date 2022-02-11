@@ -39,10 +39,10 @@
                     @if (User.IsInRole(RoleNames.PropertyOwner))
                     {
 
-                        <a class="btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete </a>
+                        <a class="btn btn-danger" asp-controller="VerificationReservations" asp-action="Delete" asp-route-id="@item.Id">Delete </a>
                         <br />
                     }
-                    <a class="btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit </a>
+                    <a class="btn  btn-warning"asp-controller="VerificationReservations"  asp-action="Edit" asp-route-id="@item.Id">Edit </a>
                     <br />
                     
 

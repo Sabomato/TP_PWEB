@@ -1,8 +1,5 @@
 ﻿@model IEnumerable<TP_PWEB.Models.Properties.Property>
 
-@{
-    ViewData["Title"] = "Index";
-}
 
 <h1>@ViewData["Title"]</h1>
 
@@ -48,15 +45,17 @@
                             @Html.DisplayFor(modelItem => item.Rating)/10
                             <br />
 
+                            <div class="align-bottom d-flex justify-content-end">
+                                @if (User.IsInRole(RoleNames.PropertyOwner))
+                                {
+                                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                    <br />
+                                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
 
-                            @if (User.IsInRole(RoleNames.PropertyOwner))
-                            {
-                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                            }
-
-                            <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-
+                                }
+                                <br />
+                                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                            </div>
 
                         </div>
                     </div>

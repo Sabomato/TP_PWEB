@@ -26,7 +26,7 @@ namespace TP_PWEB.Models
 
         public virtual Property Property{ get; set; }
 
-        public bool isDeleted { get; set; }
+        public bool IsDeleted { get; set; }
 
         [NotMapped]
         public SelectList Type { get; set; }

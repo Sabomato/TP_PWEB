@@ -22,15 +22,12 @@ namespace TP_PWEB.Models
         [Required]
         public byte[] Content { get; set; }
 
-        
-        public int? VerificationId { get; set; }
-        
-        public virtual Verification Verification { get; set; }
-
         public int? PropertyId { get; set; }
         
         public virtual Property Property  { get; set; }
-        
 
+        public int? VerificationReservationId { get; set; }
+
+        public virtual VerificationReservation VerificationReservation { get; set; }
     }
 }

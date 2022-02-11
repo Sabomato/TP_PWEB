@@ -17,6 +17,9 @@ namespace TP_PWEB.Services
         public static async Task<ICollection<Image>> ConvertImagesAsync(List<IFormFile> files)
         {
             ICollection<Image> Images = new List<Image>();
+            if (files == null)
+                return null;
+
             foreach (var file in files)
             {
                 var fileName = Path.GetFileNameWithoutExtension(file.FileName);

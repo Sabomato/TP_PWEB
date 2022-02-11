@@ -89,6 +89,12 @@
     <Compile Remove="Data\Migrations\20220119170930_PropertyV10.Designer.cs" />
     <Compile Remove="Data\Migrations\20220119175353_ReservationV7.cs" />
     <Compile Remove="Data\Migrations\20220119175353_ReservationV7.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220120102542_CLientV2.cs" />
+    <Compile Remove="Data\Migrations\20220120102542_CLientV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220120104303_CLientV2.cs" />
+    <Compile Remove="Data\Migrations\20220120104303_CLientV2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220120190614_ImageV4.cs" />
+    <Compile Remove="Data\Migrations\20220120190614_ImageV4.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

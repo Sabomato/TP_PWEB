@@ -13,7 +13,8 @@ using TP_PWEB.Models;
 using static TP_PWEB.Models.RoleNames;
 namespace TP_PWEB.Controllers
 {
-    //Adicionar verficação de login
+    
+    [Authorize]
     public class ReservationsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -73,7 +74,7 @@ namespace TP_PWEB.Controllers
                 .Include(r => r.VerificationReservations)
                 .Include(r => r.Client);
 
-            client.User = await _userManager.FindByIdAsync(clientId);
+            client.User = await _context.Users.FindAsync(clientId);
 
             ViewData["Title"] = "Reservations Made by " + client.User.UserName;
 
@@ -99,13 +100,13 @@ namespace TP_PWEB.Controllers
             return reservations;
 
         }
+
+        [ActionName("Index")]
         // GET: Reservations
         public async Task<IActionResult> Index(int? propertyId,string clientId)
         {
-            IQueryable<Reservation> reservations = null;
-
-
-            if(clientId == null)
+            IQueryable<Reservation> reservations;
+            if (clientId == null)
             {
                 if (!await _context.IsEmployeeOrOwnerAsync((int)propertyId))
                     return Unauthorized();
@@ -164,7 +165,8 @@ namespace TP_PWEB.Controllers
         }
 
         // GET: Reservations/Create
-        [Authorize(Roles = RoleNames.Client)]
+        [ActionName("Create")]
+        //[Authorize(Roles = RoleNames.Client)]
         public async Task<IActionResult> CreateAsync(int propertyId,string clientId)
         {
             if (!_context.IsCurrentUser(clientId))
@@ -251,8 +253,10 @@ namespace TP_PWEB.Controllers
         public async Task<Reservation> GetFullReservationAsync(int reservationId)
         {
             var reservation = await _context.Reservations
-                .Include(r=>r.VerificationReservations)
                 .Include(r=>r.Property)
+                .Include(r=>r.StayEvaluation)
+                .Include(r=>r.Client)
+                .Include(r=>r.ClientEvaluation)
                 .FirstOrDefaultAsync(r => r.Id == reservationId);
 
             if (reservation == null)
@@ -260,9 +264,17 @@ namespace TP_PWEB.Controllers
 
             var clientId = reservation.ClientId;
 
-            reservation.Client = new Client();
+            reservation.VerificationReservations = await _context
+                .VerificationReservations
+                .Where(v => v.ReservationId == reservationId)
+                .Include(v => v.Verification)
+                .ToListAsync();
 
             reservation.Client.User = await _context.Users.FindAsync(clientId);
+            
+            
+            
+            
 
             return reservation;
 
@@ -335,10 +347,7 @@ namespace TP_PWEB.Controllers
                 return NotFound();
             }
 
-            var reservation = await _context.Reservations
-                .Include(r => r.Client)
-                .Include(r => r.Property)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var reservation = await GetFullReservationAsync((int)id);
             if (reservation == null)
             {
                 return NotFound();
@@ -350,12 +359,12 @@ namespace TP_PWEB.Controllers
         // POST: Reservations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id,string clientId)
         {
-            var reservation = await _context.Reservations.FindAsync(id);
+            var reservation = await GetFullReservationAsync(id);
             _context.Reservations.Remove(reservation);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index),new { clientId });
         }
 
         private bool ReservationExists(int id)

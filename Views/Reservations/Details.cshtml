@@ -6,49 +6,64 @@
 
 <h1>Details</h1>
 
-<div>
+<div class="row">
     <h4>Reservation</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsDelivered)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsDelivered)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsReceived)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsReceived)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Property)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Property.Comodities)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Client)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Client.User.UserName)
-        </dd>
-    </dl>
+    <div class="col-sm">
+        <dl>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.IsDelivered)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.IsDelivered)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.IsReceived)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.IsReceived)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.StartDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.StartDate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.EndDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.EndDate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Property)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Property.Title)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Client)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Client.User.UserName)
+            </dd>
+        </dl>
+    </div>
+
+
 </div>
+
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-primary " onclick="history.go(-1); return false;" href="#">Back </a><br />
 </div>
+<br/>
+<div class="row">
+
+    <partial name="~/Views/Shared/ReservationEvaluations.cshtml" model="@Model" />
+
+</div>
+<br />
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
