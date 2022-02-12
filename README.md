@@ -13,6 +13,18 @@ Just download the repository as a zip, extract it, open the solution on **Visual
 
 ## Test users
 
-This website allows login and registration 
+ The following users are already created( Email is the same as the password):
+ 
+- Admin(Manages property managers and clients):
+  - Admin1@email.com
+  
+-  Property Manager ( Manages properties and employees ):
+  - PropertyManager1@email.com
+  
+- Employee( Manages reservations and to-do lists in check-in/:
+  - PropertyEmployee1@email.com
+- Clients (Reserves X days in a property):
+  - Client1@email.com
+
 
  
