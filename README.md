@@ -18,7 +18,7 @@ Just download the repository as a zip, extract it, open the solution on **Visual
 - Admin(Manages property managers and clients):
   - Admin1@email.com
   
--  Property Manager ( Manages properties and employees ):
+- Property Manager ( Manages properties and employees ):
   - PropertyManager1@email.com
   
 - Employee( Manages reservations and to-do lists in check-in/:
