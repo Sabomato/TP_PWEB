@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project was made in the context of the "PWEB" subject, computer engineering course, in [ISEC](https://www.isec.pt/PT/Default.aspx).  
+This project was made in the context of the "WEB Programming" subject, computer engineering course, in [ISEC](https://www.isec.pt/PT/Default.aspx).  
 The focus was building a website that allows managing, renting and hosting a property (same concept as Airbnb) with tools such as **Entity Framework Core**, **ASP.NET Core Identity** and **MVC pattern**  in **ASP.NET Core 3.1**.
 
 ## Usage
